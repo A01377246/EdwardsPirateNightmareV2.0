@@ -26,6 +26,10 @@ public class Edward extends Objeto {
 
     private EstadoEdward estado;
 
+    //Pausar animacion
+
+    private boolean animarEdward = true; // Cuando el nivel comienza, Edward siempre corre.
+
     public Edward(Texture textura, float x, float y) {
         TextureRegion region = new TextureRegion(textura);
         TextureRegion[][] texturas = region.split(160, 160);
@@ -46,18 +50,24 @@ public class Edward extends Objeto {
 
     //Reescribimos el metodo render para mostrar la animacion.
     public void render(SpriteBatch batch) {
-        float delta = Gdx.graphics.getDeltaTime();
-        switch (estado) {
-            case CAMINANDO:
-                timerAnimacion += delta;
-                TextureRegion frame = animacionCorrer.getKeyFrame(timerAnimacion);
-                batch.draw(frame, sprite.getX(), sprite.getY());
-                break;
-            case SALTANDO:
-                actualizar();
-                super.render(batch);
-                break;
-        }
+
+            float delta = Gdx.graphics.getDeltaTime();
+            switch (estado) {
+                case CAMINANDO:
+                    if(!animarEdward){ // Si el juego está en pausa, no actualizar animación.
+                        timerAnimacion = 0;
+                }
+                    timerAnimacion += delta;
+                    TextureRegion frame = animacionCorrer.getKeyFrame(timerAnimacion);
+                    batch.draw(frame, sprite.getX(), sprite.getY());
+                    break;
+                case SALTANDO:
+                    actualizar();
+                    super.render(batch);
+                    break;
+            }
+
+        //Si está pausado, dejar de moverse
     }
 
     private void actualizar() {
@@ -90,11 +100,26 @@ public class Edward extends Objeto {
 
     }
 
+    public void cambiaAnimación (EstadoJuego estado){ // Este método cambia el valor de la variable animación cuando el juego se pone en pausa o se sale de pausa
+        if(estado == EstadoJuego.PAUSADO){
+            animarEdward = false;
+        }else{
+            animarEdward = true;
+
+
+        }
+
+    }
+
     public float getX() {
         return sprite.getX();
     }
 
     public float getY() {
         return sprite.getY();
+    }
+
+    public EstadoEdward devolverEstado(){ //Devuelve el estado del personaje
+        return estado;
     }
 }

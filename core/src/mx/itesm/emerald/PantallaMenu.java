@@ -24,6 +24,7 @@ public class PantallaMenu extends Pantalla {
     @Override
     public void show() { // Se ejecuta al inicio, antes de mostrar la pantalla
         crearMenu(); // usar otro método para no saturar con código
+        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.MENU); //reproducir música del menú
     }
 
     private void crearMenu() {
@@ -40,7 +41,7 @@ public class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Cambiar pantalla
-                juego.setScreen(new PantallaPlaya(juego));
+                juego.setScreen(new PantallaCarga(juego, Pantallas.NIVEL_1)); //Cargar primer nivel
             }
         });
 

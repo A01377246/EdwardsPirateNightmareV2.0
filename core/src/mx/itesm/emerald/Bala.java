@@ -7,13 +7,16 @@ public class Bala extends Objeto {
 
     public Bala(Texture textura, float x, float y) {
         super(textura, x, y);
+        sprite.setScale(.5f); // Reducir el tamaño de la vala 50%
     }
+
 
     //Mover a la derecha la bola de fuego
     public void mover(float delta) {
         float dx = vX * delta;
         sprite.setX(sprite.getX() + dx);
-        sprite.setY(120);
+
+
     }
 
     public float getX() {
