@@ -3,10 +3,8 @@ package mx.itesm.emerald;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,9 +20,6 @@ import mx.itesm.emerald.edwardspiratenightmare.utilities.Texto;
 
 public class PantallaPlaya extends Pantalla {
     private EdwardsPirateNightmare juego;
-
-    // Asset Manager
-    private AssetManager assetManager;
 
     //Fondo infinito
     private Texture texturaFPlaya;
@@ -79,29 +74,18 @@ public class PantallaPlaya extends Pantalla {
     //Vidas del personaje
     private Array<Corazon> arrCorazones;
 
-    //Pausa
-
-    private EscenaPausa escenaPausa; // escena
-    private BotonPausa botonPausa;
-    private Texture texturaBotonPausa;
-    private ProcesarEntrada procesadorEntrada; // Objeto que registra
-
-    
-
     // bandera de fin de nivel
     private boolean banderaFinNivel;
 
-    //Rectangulo de colision
-    Rectangle rectColisionE;
+    //Estados del juego
+    private EstadoNivel estadoNivel = EstadoNivel.Jugando; //Inicia jugando
 
-    //Estados del Juego
-
-    private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Estado Inicial, jugando
+    //Cambio de Nivel
+    private EscenaCambio escenaCambio;
 
 
     public PantallaPlaya(EdwardsPirateNightmare juego) {
         this.juego = juego;
-        assetManager = juego.getAssetManager(); //Obtener asset Manager
     }
 
 
@@ -120,40 +104,14 @@ public class PantallaPlaya extends Pantalla {
         crearTumba();
         crearIconoContadorMonedas();
         crearItemCorazon();
-        crearBotonPausa();
-        crearRectanguloColisionEdward();
-        procesadorEntrada = new ProcesarEntrada();
-
-        //Reproducir Musica nivel 1
-        juego.detenerMusica(); // detener música del menú
-        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.NIVEL_1);
-
-
-
         //Pone el input Processor
-        Gdx.input.setInputProcessor(procesadorEntrada);
+        Gdx.input.setInputProcessor(new ProcesarEntrada());
 
-
-    }
-
-    private void crearRectanguloColisionEdward() {
-        rectColisionE = new Rectangle();
-        rectColisionE.setX(edward.sprite.getX()); //El rectangulo inicia exactamente dónde se encuentra Edward
-        rectColisionE.setY(edward.sprite.getY());
-        rectColisionE.setWidth(edward.sprite.getBoundingRectangle().getWidth()-edward.sprite.getWidth()+edward.getX());//Restar el ancho del sprite al bounding rectangle para que la colisión sea más precisa
-
-    }
-
-    private void crearBotonPausa(){
-
-        texturaBotonPausa = assetManager.get("botones/botonPausa.png");
-        botonPausa = new BotonPausa(texturaBotonPausa, 0, ALTO - texturaBotonPausa.getHeight()); //Dibujar el botón de pausa en la esquina superior izquierda
-        botonPausa.sprite.setScale(1.5f); //hacer el botón pausa 1.5 veces mas grande.
 
     }
 
     private void crearItemCorazon() {
-        texturaCorazon = assetManager.get("sprites/heart.png");
+        texturaCorazon = new Texture("sprites/heart.png");
         arrItemCorazon = new Array<>(2); // Solo apareceran dos corazones que ayudarán al jugador a recuperar salud.
     }
 
@@ -162,14 +120,15 @@ public class PantallaPlaya extends Pantalla {
         iconoContadorMonedas.sprite.setScale(2);
     }
 
-    private void crearMoneda() {
-        texturaMoneda = assetManager.get("sprites/coin.png");
+    private void
+    crearMoneda() {
+        texturaMoneda = new Texture("sprites/coin.png");
         arrMonedas = new Array<>(5); // Máximo 5 monedas aparecerán por nivel
 
     }
 
     private void crearCorazon() {
-        Texture texturaCorazon = assetManager.get("sprites/heart.png");
+        Texture texturaCorazon = new Texture("sprites/heart.png");
         arrCorazones = new Array<>(5);
         for (int renglon = 0; renglon < 1; renglon++) {
             for (int colunma = 0; colunma < 5; colunma++) {
@@ -182,11 +141,11 @@ public class PantallaPlaya extends Pantalla {
 
     private void crearBalas() {
         arrBalas = new Array<>();
-        texturaBala = assetManager.get("sprites/bala.png");
+        texturaBala = new Texture("sprites/bala.png");
     }
 
     private void crearFondo() {
-        texturaFPlaya = assetManager.get("pantallas/P1.png");
+        texturaFPlaya = new Texture("pantallas/P1.png");
     }
 
     private void crearTexto() {
@@ -196,11 +155,11 @@ public class PantallaPlaya extends Pantalla {
 
     private void crearFantasma1() {
         arrFantasma1 = new Array<>();
-        texturaFantasma1 = assetManager.get("sprites/fantasma1/fantasmaAnimacion.png");
+        texturaFantasma1 = new Texture("sprites/fantasma1/fantasmaAnimacion.png");
     }
 
     private void crearEdward() {
-        texturaEdward = assetManager.get("sprites/edwardRun.png");
+        texturaEdward = new Texture("sprites/edwardRun.png");
         edward = new Edward(texturaEdward, 20, 50);
     }
 
@@ -233,11 +192,6 @@ public class PantallaPlaya extends Pantalla {
         //Dibujar marcador
         texto.mostrarMensaje(batch, Integer.toString(puntos), 0.95f * ANCHO, 0.95f * ALTO);
 
-        //Dibujar botón Pausa
-
-        botonPausa.render(batch);
-
-
         //Dibujar corazon
         for (Corazon corazon : arrCorazones) {
             corazon.render(batch);
@@ -257,7 +211,7 @@ public class PantallaPlaya extends Pantalla {
         }
         // Dibujar contador monedas
             iconoContadorMonedas.render(batch);
-            texto.mostrarMensaje(batch, Integer.toString(contadorMonedas), 0.55f * ANCHO, 0.95f * ALTO);
+            texto.mostrarMensaje(batch, Integer.toString(contadorMonedas), 0.50f * ANCHO, 0.95f * ALTO);
 
         //Dibujar item corazon
 
@@ -265,15 +219,25 @@ public class PantallaPlaya extends Pantalla {
             itemCorazon.render(batch);
         }
 
+        batch.end();
+
         if(banderaMuerte){
             juego.setScreen(new PantallaJuegoTerminado(juego));
         }
         if(banderaFinNivel){
+            estadoNivel = EstadoNivel.cambioNivel;
             tiempoSalida -= delta; // Comenzar a restar del tiempo de salida
             Gdx.input.setInputProcessor(null); // dejar de procesar lo que haga el usuario
-            edward.moverDerecha(delta);
+            edward.moverDerecha(delta*2);
+            if(escenaCambio == null)
+            {
+                escenaCambio = new EscenaCambio(vista);
+            }
+            for (Fantasma1 fantasma1: arrFantasma1) {
+                fantasma1.moverDerecha(-delta);
+            }
             if(tiempoSalida <= 0) {
-                juego.setScreen(new PantallaFinNivel(juego));
+                //juego.setScreen(new PantallaFinNivel(juego));
                 // Guardar puntos y monedas al terminar el nivel
                 Preferences preferencias = Gdx.app.getPreferences("Puntaje");
                 preferencias.putInteger("puntos", puntos);
@@ -284,25 +248,18 @@ public class PantallaPlaya extends Pantalla {
             }
         }
 
-
-
-
-
-
-        batch.end();
-
-        //Dibujar la pausa
-        if (estadoJuego == EstadoJuego.PAUSADO && escenaPausa != null ){ // Si el usuario ya tocó el botón de pausa
-            escenaPausa.draw(); // dibujar pausa
+        //Dibujar escena de cambio de nivel
+        if (estadoNivel == EstadoNivel.cambioNivel && escenaCambio != null) {
+            escenaCambio.draw();
         }
+
     }
 
 
 
 
     private void actualizar(float delta) {
-        //Actualizar solo cuando se está jugando
-        if(estadoJuego == EstadoJuego.JUGANDO) {
+        if (estadoNivel == EstadoNivel.Jugando) {
             actualizarFondo();
             actualizarFantasma1(delta);
             actualizarBalas(delta);
@@ -313,7 +270,19 @@ public class PantallaPlaya extends Pantalla {
             verificarColisionMoneda();
             actualizarItemCorazon(delta);
             verificarColisionItemCorazon();
-            actualizarRectanguloDeColision();
+        }
+        if(estadoNivel == EstadoNivel.cambioNivel)
+        {
+            actualizarFondo();
+           // actualizarFantasma1(delta);
+            actualizarBalas(delta);
+            //verificarColisionFantasma();
+            actualizarTiempo(delta);
+            verificarSalud();
+            actualizarMonedas(delta);
+            //verificarColisionMoneda();
+            actualizarItemCorazon(delta);
+            verificarColisionItemCorazon();
         }
     }
 
@@ -355,7 +324,7 @@ public class PantallaPlaya extends Pantalla {
         for(int i = arrMonedas.size-1; i >= 0; i--){
             Moneda moneda = arrMonedas.get(i);
             // si la moneda y Edward chocan
-            if(moneda.sprite.getBoundingRectangle().overlaps(rectColisionE)){
+            if(moneda.sprite.getBoundingRectangle().overlaps(edward.sprite.getBoundingRectangle())){
                 contadorMonedas += 1; // Sumar uno al contador de monedas
                 arrMonedas.removeIndex(i); //Remover las monedas
 
@@ -390,14 +359,14 @@ public class PantallaPlaya extends Pantalla {
 
     private void verificarSalud() {
         if (arrCorazones.size == 0){
-            banderaMuerte = true;
+                banderaMuerte = true;
             //juego.setScreen(new PantallaJuegoTerminado(juego));
         }
     }
 
 
     private void crearTumba() {
-        texturaTumba = assetManager.get("sprites/soloHeart.png");
+        texturaTumba = new Texture("sprites/soloHeart.png");
         f = new Tumba(texturaTumba,edward.getX(), edward.getY());
     }
 
@@ -415,7 +384,8 @@ public class PantallaPlaya extends Pantalla {
                 for(int j = arrFantasma1.size-1; j >= 0; j-- ){
                     Fantasma1 fantasma = arrFantasma1.get(j);
                     //si edward choca con un fantasma
-                        if(fantasma.sprite.getBoundingRectangle().overlaps(rectColisionE)){
+                    //if(fantasma.getX() == edward.getX() + edward.sprite.getWidth()/2 && fantasma.getY() <= edward.getY() + edward.sprite.getHeight()/2){
+                        if(fantasma.sprite.getBoundingRectangle().overlaps(edward.sprite.getBoundingRectangle())){
                         arrCorazones.removeIndex(i);
                         arrFantasma1.removeIndex(j);
 
@@ -474,7 +444,7 @@ public class PantallaPlaya extends Pantalla {
                 fantasma1.moverIzquierda(delta * 2); // los fantasmas son 2 veces más rápidos!
             }}else if (timerNivel < 120){
             for (Fantasma1 fantasma1 : arrFantasma1) {
-                fantasma1.moverIzquierda(delta * 5); // los fantasmas son 5 veces más rápidos!
+                fantasma1.moverIzquierda(delta * 3); // los fantasmas son 5 veces más rápidos!
             }}else{
                 //No mover fantasmas en los ultimos 10 segundos de salida del nivel
             }
@@ -498,36 +468,10 @@ public class PantallaPlaya extends Pantalla {
     }
 
     @Override
-    public void dispose() { //Borrar objetos cargados en el assetManager
+    public void dispose() {
         arrCorazones.clear();
         arrFantasma1.clear();
         arrBalas.clear();
-        //borrar sprites
-        assetManager.unload("sprites/pauseButton.png");
-        assetManager.unload("sprites/edwardRun.png");
-        assetManager.unload("sprites/coin.png");
-        assetManager.unload("sprites/bala.png");
-        assetManager.unload("sprites/heart.png");
-        assetManager.unload("sprites/fantasma1/fantasmaAnimacion.png");
-        assetManager.unload("sprites/soloHeart.png");
-
-
-
-        //borrar pantallas
-
-        assetManager.unload("pantallas/pantallaFinNivelOp.png");
-        assetManager.unload("pantallas/p1GameOverAlt.png");
-        assetManager.unload("pantallas/P1.png");
-
-
-        //cargar botones
-        assetManager.unload("pausa/botonContinuar.png");
-        assetManager.unload("pausa/botonMenu.png");
-        assetManager.unload("pausa/fondoPPausa.png");
-        assetManager.unload("pausa/botonMenu.png");
-        assetManager.unload("botones/botonPausa.png");
-
-
     }
 
     private class ProcesarEntrada implements InputProcessor {
@@ -553,22 +497,12 @@ public class PantallaPlaya extends Pantalla {
             camara.unproject(v);
             if (v.x >= ANCHO / 2) {
                 //Dispara
-                Bala bala = new Bala(texturaBala, edward.sprite.getX()+edward.sprite.getWidth()*1/2, edward.getY() + edward.sprite.getHeight()*1/2);
+                Bala bala = new Bala(texturaBala, edward.getSprite().getX(), edward.getSprite().getY() + edward.sprite.getHeight()/2);
                 arrBalas.add(bala);
-                //Verificar boton pausa
-
-            }if (v.x > botonPausa.sprite.getX() && v.x <= 0 + botonPausa.sprite.getWidth() &&
-                    v.y < botonPausa.sprite.getY() + botonPausa.sprite.getHeight() && v.y > botonPausa.sprite.getY()
-            && escenaPausa == null){ //Solo crear la escena de pausa cuándo no existe un objeto previo
-
-                escenaPausa = new EscenaPausa(vista); // crear nueva escena Pausa
-                estadoJuego = EstadoJuego.PAUSADO;
-                edward.cambiaAnimación(estadoJuego); // pausar a edward
-                Gdx.input.setInputProcessor(escenaPausa); // Cambiar el input Processor a escena pausa
-
-            }if (v.x <= ANCHO /2 && v.y < ALTO-botonPausa.sprite.getHeight()){ // Saltar al tocar el lado izquierdo de la pantalla y cuando no se toca el boton de pausa
+            } else {
                 edward.saltar();
             }
+
             return true;
         }
 
@@ -593,69 +527,33 @@ public class PantallaPlaya extends Pantalla {
         }
     }
 
-    private void actualizarRectanguloDeColision() {
-        if(edward.devolverEstado() == EstadoEdward.SALTANDO ){  // Si edward está saltando, actualizar constantemente su rectángulo de colisión
-            rectColisionE.setHeight(edward.sprite.getBoundingRectangle().getHeight()+edward.sprite.getHeight());
-        }
-    }
-
-    //Escena que se muestra cuando el usuario pausa el juego
-    private class EscenaPausa extends Stage {
-
+    //Escena cuando cambia de nivel
+    private class EscenaCambio extends Stage
+    {
         private Texture texturaFondo;
 
-        public EscenaPausa(final Viewport vista){
-            super(vista); // Usar constructor de super clase stage
+        //Imagen ventana de cambio
+        public EscenaCambio(Viewport vista)
+        {
+            super(vista);
+            //texto.mostrarMensaje(batch,"Pulsa para continuar tu camino...",ANCHO/2,ALTO/2);
 
-            texturaFondo = assetManager.get("pausa/fondoPPausa.png");
-            Image imgFondo = new Image(texturaFondo);
-            //Mostrar imagen en el centro de la pantalla
-            imgFondo.setPosition(ANCHO/2, ALTO/2 -30, Align.center);
-
-            // Crear botones para la pantalla pausa usando el método crear botón
-
-            Button botonContinuar = crearBoton("pausa/botonContinuar.png");
-            Button botonMenu = crearBoton("pausa/botonMenu.png");
-
-            //Posiciones de los botones
-            botonContinuar.setPosition(ANCHO/2, 520*.7f, Align.center);
-            botonMenu.setPosition(ANCHO/2, 320*.5f, Align.center);
-
-            addActor(imgFondo);
-            addActor(botonContinuar);
-            addActor(botonMenu);
-
-            //Listener de boton continuar
-
-            botonContinuar.addListener(new ClickListener() {
+            //Boton para continuar
+            Texture texturaBtn = new Texture("botones/button_nivel2.png");
+            TextureRegionDrawable trd = new TextureRegionDrawable(texturaBtn);
+            Button btn = new Button(trd);
+            addActor(btn);
+            btn.setPosition(ANCHO/2,0.4f*ALTO,Align.center);
+            //Agrega listener del boton
+            btn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    //Quitar pausa, animar a edward de nuevo y devolver el input processor al juego
-                    estadoJuego = EstadoJuego.JUGANDO;
-                    edward.cambiaAnimación(estadoJuego);
-                    Gdx.input.setInputProcessor(procesadorEntrada);
-                    escenaPausa = null; // Hacer que sea posible seleccionar la pausa de nuevo.
-
+                    //Cambiar la pantalla
+                    //juego.setScreen(new Nivel2(juego));
                 }
-            });
-
-            //Listener de boton menú
-            botonMenu.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    //Salir del nivel y volver a la pantalla principal
-                    juego.setScreen(new PantallaMenu(juego));
-                }
-            });
-
-
-
-
+            } );
         }
-
-
 
     }
 }
