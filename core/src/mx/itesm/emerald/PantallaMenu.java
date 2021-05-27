@@ -25,9 +25,9 @@ public class PantallaMenu extends Pantalla {
     @Override
     public void show() { // Se ejecuta al inicio, antes de mostrar la pantalla
         crearMenu(); // usar otro método para no saturar con código
-            juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.MENU); // Reproducir música menú al arir el juego
+        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.MENU); // Reproducir música menú al arir el juego
         Gdx.input.setCatchKey(Input.Keys.BACK, false); //Dejar de atrapar tecla back
-        }
+    }
 
 
     private void crearMenu() {

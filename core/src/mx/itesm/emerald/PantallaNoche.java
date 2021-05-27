@@ -22,14 +22,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import mx.itesm.emerald.edwardspiratenightmare.utilities.Texto;
 
-public class PantallaPlaya extends Pantalla {
+public class PantallaNoche extends Pantalla {
     private EdwardsPirateNightmare juego;
 
     // Asset Manager
     private AssetManager assetManager;
 
     //Fondo infinito
-    private Texture texturaFPlaya;
+    private Texture texturaNoche;
     private float xFondo = 0;
 
     //Personaje
@@ -105,7 +105,7 @@ public class PantallaPlaya extends Pantalla {
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Estado Inicial, jugando
 
 
-    public PantallaPlaya(EdwardsPirateNightmare juego) {
+    public PantallaNoche(EdwardsPirateNightmare juego) {
         this.juego = juego;
         assetManager = juego.getAssetManager(); //Obtener asset Manager
     }
@@ -208,7 +208,7 @@ public class PantallaPlaya extends Pantalla {
     }
 
     private void crearFondo() {
-        texturaFPlaya = assetManager.get("pantallas/P1.png");
+        texturaNoche = assetManager.get("pantallas/Fondo2.png");
     }
 
     private void crearTexto() {
@@ -244,9 +244,9 @@ public class PantallaPlaya extends Pantalla {
         actualizar(delta);  //Actualizar
         //Dibuja Fondo
 
-        batch.draw(texturaFPlaya, xFondo, 0);
+        batch.draw(texturaNoche, xFondo, 0);
 
-        batch.draw(texturaFPlaya, xFondo + texturaFPlaya.getWidth(), 0);
+        batch.draw(texturaNoche, xFondo + texturaNoche.getWidth(), 0);
 
         //Dibuja personaje
         edward.render(batch);
@@ -499,7 +499,7 @@ public class PantallaPlaya extends Pantalla {
 
     private void actualizarFondo() {
         xFondo -= 4;
-        if (xFondo <= -texturaFPlaya.getWidth()) {
+        if (xFondo <= -texturaNoche.getWidth()) {
             xFondo = 0;
         }
     }
@@ -530,7 +530,7 @@ public class PantallaPlaya extends Pantalla {
         //borrar pantallas
         assetManager.unload("pantallas/pantallaFinNivelOp.png");
         assetManager.unload("pantallas/p1GameOverAlt.png");
-        assetManager.unload("pantallas/P1.png");
+        assetManager.unload("pantallas/Fondo2.png");
 
 
         //cargar botones
