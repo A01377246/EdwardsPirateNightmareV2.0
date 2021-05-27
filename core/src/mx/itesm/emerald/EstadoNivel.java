@@ -4,5 +4,6 @@ public enum EstadoNivel {
     Jugando,
     Pausado,
     Terminando,
-    Perdiendo,
+    cambioNivel,
+    Perdiendo;
 }

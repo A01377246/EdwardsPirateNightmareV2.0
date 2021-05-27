@@ -47,6 +47,11 @@ public class Fantasma1 extends Objeto {
         sprite.setX(sprite.getX() + dx);
     }
 
+    public void moverDerecha(float delta){
+        float dx = velocidadX * delta;
+        sprite.setX(sprite.getX()+dx);
+    }
+
     public float getX(){
         return sprite.getX();
     }
