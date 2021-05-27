@@ -53,6 +53,12 @@ public class PantallaNoche extends Pantalla {
     private Sound sonidoFantasma;
     private boolean reproducirSonidoFantasma;
 
+    //Fantasma 2
+    private Array<Fantasma2> arrFantasma2;
+    private Texture texturaFantasma2;
+    private float timerCrearFantasma2;
+    private final float TIEMPO_CREAR_FANTASMA2 = 6;
+
     //Crear Marcador
     private int puntos = 0;
     private Texto texto;
@@ -119,6 +125,7 @@ public class PantallaNoche extends Pantalla {
         crearBalas();
         crearCorazon();
         crearFantasma1();
+        crearFantasma2();
         crearMoneda();
         crearTumba();
         crearIconoContadorMonedas();
@@ -142,6 +149,12 @@ public class PantallaNoche extends Pantalla {
 
 
     }
+
+    private void crearFantasma2() {
+        arrFantasma2 = new Array<>();
+        texturaFantasma2 = assetManager.get("sprites/fantasma2/fantasma2Animacion.png");
+    }
+
 
     private void crearRectanguloColisionEdward() {
         rectColisionE = new Rectangle();
@@ -266,9 +279,13 @@ public class PantallaNoche extends Pantalla {
         for (Fantasma1 fantasma1 : arrFantasma1) {
 
             fantasma1.render(batch);
-
-
         }
+        //Dibujar fantasma1
+
+        for (Fantasma2 fantasma2 : arrFantasma2) {
+            fantasma2.render(batch);
+        }
+
         //Dibujar balas
         for (Bala bala : arrBalas) {
             bala.render(batch);
@@ -292,6 +309,7 @@ public class PantallaNoche extends Pantalla {
             juego.setScreen(new PantallaJuegoTerminado(juego));
         }
         if (banderaFinNivel) {
+            estadoJuego = EstadoJuego.CAMBION;
             tiempoSalida -= delta; // Comenzar a restar del tiempo de salida
             Gdx.input.setInputProcessor(null); // dejar de procesar lo que haga el usuario
             edward.moverDerecha(delta);
@@ -319,8 +337,10 @@ public class PantallaNoche extends Pantalla {
         if (estadoJuego == EstadoJuego.JUGANDO) {
             actualizarFondo();
             actualizarFantasma1(delta);
+            actualizarFantasma2(delta);
             actualizarBalas(delta);
             verificarColisionFantasma();
+            verificarColisionFantasma2();
             actualizarTiempo(delta);
             verificarSalud();
             actualizarMonedas(delta);
@@ -328,6 +348,51 @@ public class PantallaNoche extends Pantalla {
             actualizarItemCorazon(delta);
             verificarColisionItemCorazon();
             actualizarRectanguloDeColision();
+        }
+    }
+
+    private void verificarColisionFantasma2() {
+        for (int i = arrCorazones.size - 1; i >= 0; i--) {
+            for (int j = arrFantasma2.size - 1; j >= 0; j--) {
+                Fantasma2 fantasma2 = arrFantasma2.get(j);
+                //si edward choca con un fantasma
+                if (fantasma2.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
+                    edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
+                    arrCorazones.removeIndex(i); //edward pierde un corazon
+                    arrFantasma2.removeIndex(j); //el fantasma desaparece
+
+                }
+
+            }
+        }
+    }
+
+    private void actualizarFantasma2(float delta) {
+        timerCrearFantasma2 += delta;
+        if (timerCrearFantasma2 > TIEMPO_CREAR_FANTASMA2) {
+            timerCrearFantasma2 = 0;
+            //crear fantasma1
+            float xFantasma2 = MathUtils.random(ANCHO, ANCHO * 1.5f);
+            float yFantasma2 = MathUtils.random(30, 210);
+            Fantasma2 fantasma2 = new Fantasma2(texturaFantasma2, xFantasma2, yFantasma2);
+            arrFantasma2.add(fantasma2);
+        }
+
+        //Mover al fantasma1
+        if (timerNivel < 50) {  // Los fantasmas van a una velocidad normal
+            for (Fantasma2 fantasma2 : arrFantasma2) {
+                fantasma2.moverIzquierda(delta);
+            }
+        } else if (timerNivel < 90) {
+            for (Fantasma2 fantasma2 : arrFantasma2) {
+                fantasma2.moverIzquierda(delta + 50); // los fantasmas son 2 veces más rápidos!
+            }
+        } else if (timerNivel < 120) {
+            for (Fantasma2 fantasma2 : arrFantasma2) {
+                fantasma2.moverIzquierda(delta + 100); // los fantasmas son 5 veces más rápidos!
+            }
+        } else {
+            //No mover fantasmas en los ultimos 10 segundos de salida del nivel
         }
     }
 
@@ -449,7 +514,9 @@ public class PantallaNoche extends Pantalla {
             //prueba si la bola debe de desaparecer si se sale de la pantalla
             if (bala.getX() > ANCHO) {
                 arrBalas.removeIndex(i);
-            } else {
+            }
+            else
+                {
                 for (int iA = arrFantasma1.size - 1; iA >= 0; iA--) {
                     Fantasma1 fantasma1 = arrFantasma1.get(iA);
                     if (bala.sprite.getBoundingRectangle().overlaps(fantasma1.sprite.getBoundingRectangle())) {

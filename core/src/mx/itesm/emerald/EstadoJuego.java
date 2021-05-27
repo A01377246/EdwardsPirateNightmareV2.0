@@ -4,5 +4,6 @@ package mx.itesm.emerald;
 public enum EstadoJuego {
 
     JUGANDO,
-    PAUSADO
+    PAUSADO,
+    CAMBION
 }
