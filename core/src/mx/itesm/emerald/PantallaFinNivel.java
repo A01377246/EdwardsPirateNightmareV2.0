@@ -1,6 +1,7 @@
 package mx.itesm.emerald;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,6 +43,7 @@ public class PantallaFinNivel extends Pantalla {
     public void show() {
         recuperarInfoNivel();
         crearTexto();
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
     }
 

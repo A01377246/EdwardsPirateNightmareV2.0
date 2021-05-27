@@ -1,6 +1,7 @@
 package mx.itesm.emerald;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import mx.itesm.emerald.edwardspiratenightmare.utilities.Texto;
 
@@ -20,12 +23,8 @@ public class PantallaTienda extends Pantalla {
     private Texture texturaMoneda;
     private Moneda iconoMoneda;
 
-    //Objetos que se venden en la tienda
+    private EscenaCorazon escenaCorazon;
 
-    private Corazon objetoCorazon;
-    private Texture texturaCorazon;
-    private Bandana objetoBandana;
-    private Texture texturaBandana;
 
     public PantallaTienda(final EdwardsPirateNightmare juego) {
         tienda = new Texture("pantallas/empty store.png");
@@ -51,25 +50,12 @@ public class PantallaTienda extends Pantalla {
         recuperarMonedas();
         crearTexto();
         crearIconoMoneda();
-        crearBandana();
-        crearCorazon();
+        crearBotones();
+        Gdx.input.setCatchKey(Input.Keys.BACK, false);
 
     }
 
-    private void crearCorazon() {
-        texturaCorazon= new Texture ("sprites/heart.png");
 
-        objetoCorazon= new Corazon(texturaCorazon, ANCHO/2, ALTO - 450);
-        objetoCorazon.sprite.setScale(2.5f);
-
-    }
-
-    private void crearBandana() {
-        texturaBandana = new Texture ("sprites/bandana.png");
-
-        objetoBandana = new Bandana(texturaBandana, ANCHO/2, ALTO - 200);
-        objetoBandana.sprite.setScale(4);
-    }
 
     private void crearIconoMoneda() {
         texturaMoneda = new Texture ("sprites/coin.png");
@@ -78,6 +64,28 @@ public class PantallaTienda extends Pantalla {
         iconoMoneda.sprite.setScale(2);
     }
 
+
+    private void crearBotones(){
+        Button btnBandana = crearBoton("sprites/bandana.png");
+        btnBandana.setTransform(true);
+        btnBandana.scaleBy(2);
+
+        btnBandana.setPosition(ANCHO / 2,  ALTO * 3/4, Align.center); // centrar el botòn en las coordenadas selecconadas
+
+        Button btnCorazon = crearBoton("sprites/heart.png");
+        btnCorazon.setTransform(true);
+        btnCorazon.scaleBy(2);
+        btnCorazon.setPosition(ANCHO / 2,  ALTO * 1/4, Align.center); // centrar el botòn en las coordenadas selecconadas
+        btnCorazon.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+               escenaCorazon = new EscenaCorazon(vista);
+            }
+        });
+        escenaTienda.addActor(btnBandana);
+        escenaTienda.addActor(btnCorazon);
+
+    }
     private void crearTexto() {
         texto = new Texto("fonts/pirate.fnt");
     }
@@ -94,16 +102,14 @@ public class PantallaTienda extends Pantalla {
         batch.draw(tienda, 0, 0);
         iconoMoneda.render(batch);
         // Mostrar bandana, precio y descripción
-        objetoBandana.render(batch);
         texto.mostrarMensaje(batch, Integer.toString(cantidadMonedas), ANCHO -100, ALTO - 50);
         texto.mostrarMensaje(batch, "Multiplica tus puntos por dos", ANCHO/2, ALTO - 225);
         texto.mostrarMensaje(batch, "10", ANCHO/2, ALTO - 180);
 
         // Mostrar corazon, precio y descripción
 
-        objetoCorazon.render(batch);
         texto.mostrarMensaje(batch, "Inicias con un punto de vida extra", ANCHO/2, ALTO - 525);
-        texto.mostrarMensaje(batch, "10", ANCHO/2, ALTO - 480);
+        texto.mostrarMensaje(batch, "10", ANCHO/2, ALTO*1/8);
 
         batch.end();
         escenaTienda.draw();
@@ -121,7 +127,24 @@ public class PantallaTienda extends Pantalla {
     public void dispose() {
     }
 
+    //método para simplificiar la creación de botones
+    private Button crearBoton(String imagen) { // añadir segundo parámetro para hacer un cambio cuando el usuario da click
+        // crear otra textura y otro drawable
+        Texture texturaBoton = new Texture(imagen); // cargar imagén del botón.
+        TextureRegionDrawable trdBtnJugar = new TextureRegionDrawable(texturaBoton); // tipo correcto del boton, drawable. No acepta texture
 
+
+
+        return new Button(trdBtnJugar); // regesar imagen normal e imagen de retroalimentacion
+    }
+
+    private class EscenaCorazon extends Stage {
+        public EscenaCorazon(final Viewport vista){
+
+
+        }
+
+    }
 }
 
 

@@ -1,6 +1,7 @@
 package mx.itesm.emerald;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -39,6 +40,7 @@ public class PantallaHistoria extends Pantalla {
 
     @Override
     public void show() {
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
     }
 

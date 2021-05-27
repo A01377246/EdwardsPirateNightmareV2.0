@@ -1,6 +1,7 @@
 package mx.itesm.emerald;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,8 +25,10 @@ public class PantallaMenu extends Pantalla {
     @Override
     public void show() { // Se ejecuta al inicio, antes de mostrar la pantalla
         crearMenu(); // usar otro método para no saturar con código
-        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.MENU); //reproducir música del menú
-    }
+            juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.MENU); // Reproducir música menú al arir el juego
+        Gdx.input.setCatchKey(Input.Keys.BACK, false); //Dejar de atrapar tecla back
+        }
+
 
     private void crearMenu() {
         texturaFondo = new Texture("pantallas/PantallaPrincipal.png");

@@ -1,9 +1,11 @@
 package mx.itesm.emerald;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -33,6 +35,8 @@ public class PantallaPlaya extends Pantalla {
     //Personaje
     private Edward edward;
     private Texture texturaEdward;
+    private Sound edwardLastimado;
+    private Sound edwardSalto;
 
     // bandera Muerte
     private boolean banderaMuerte = false;
@@ -46,6 +50,8 @@ public class PantallaPlaya extends Pantalla {
     private Texture texturaFantasma1;
     private float timerCrearFantasma1;
     private final float TIEMPO_CREAR_FANTASMA1 = 3;
+    private Sound sonidoFantasma;
+    private boolean reproducirSonidoFantasma;
 
     //Crear Marcador
     private int puntos = 0;
@@ -58,6 +64,7 @@ public class PantallaPlaya extends Pantalla {
     private final float TIEMPO_CREAR_MONEDA = 10; // las monedas se crearán cada 10 segundos
     private int contadorMonedas = 0; //cuenta cuántas monedas recoge el usuario
     private Moneda iconoContadorMonedas;
+    private Sound sonidoMonedaRecogida;
 
     //Timer salida de edward del nivel
 
@@ -122,10 +129,15 @@ public class PantallaPlaya extends Pantalla {
         crearItemCorazon();
         crearBotonPausa();
         crearRectanguloColisionEdward();
+        crearSonidos();
         procesadorEntrada = new ProcesarEntrada();
 
+        //Bloquear tecla back
+
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
+
+
         //Reproducir Musica nivel 1
-        juego.detenerMusica(); // detener música del menú
         juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.NIVEL_1);
 
 
@@ -139,8 +151,23 @@ public class PantallaPlaya extends Pantalla {
     private void crearRectanguloColisionEdward() {
         rectColisionE = new Rectangle();
         rectColisionE.setX(edward.sprite.getX()); //El rectangulo inicia exactamente dónde se encuentra Edward
-        rectColisionE.setY(edward.sprite.getY());
-        rectColisionE.setWidth(edward.sprite.getBoundingRectangle().getWidth()-edward.sprite.getWidth()+edward.getX());//Restar el ancho del sprite al bounding rectangle para que la colisión sea más precisa
+        rectColisionE.setY(edward.sprite.getY()); //Iniciar la coordenada y del rectángulo en los pies de edward
+        rectColisionE.setWidth(edward.getX());//
+    }
+
+    private void crearSonidos(){ //Este método inicializa los objetos que serán usados para efectos de sonido
+
+        //Sonidos Objetos
+        sonidoMonedaRecogida = assetManager.get("sonidos/moneda.wav");
+
+        //SonidosEnemigos
+
+        sonidoFantasma = assetManager.get("sonidos/ghost.wav");
+
+
+        //SonidosEdward
+        edwardLastimado = assetManager.get("sonidos/hurt.wav");
+        edwardSalto = assetManager.get("sonidos/jump.wav");
 
     }
 
@@ -244,7 +271,10 @@ public class PantallaPlaya extends Pantalla {
         }
         //Dibujar fantasma1
         for (Fantasma1 fantasma1 : arrFantasma1) {
+
             fantasma1.render(batch);
+
+
         }
         //Dibujar balas
         for (Bala bala : arrBalas) {
@@ -357,6 +387,7 @@ public class PantallaPlaya extends Pantalla {
             // si la moneda y Edward chocan
             if(moneda.sprite.getBoundingRectangle().overlaps(rectColisionE)){
                 contadorMonedas += 1; // Sumar uno al contador de monedas
+                sonidoMonedaRecogida.play(); //Reproducir sonido de moneda recogida
                 arrMonedas.removeIndex(i); //Remover las monedas
 
 
@@ -416,8 +447,9 @@ public class PantallaPlaya extends Pantalla {
                     Fantasma1 fantasma = arrFantasma1.get(j);
                     //si edward choca con un fantasma
                         if(fantasma.sprite.getBoundingRectangle().overlaps(rectColisionE)){
-                        arrCorazones.removeIndex(i);
-                        arrFantasma1.removeIndex(j);
+                            edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
+                            arrCorazones.removeIndex(i); //edward pierde un corazon
+                            arrFantasma1.removeIndex(j); //el fantasma desaparece
 
                         }
 
@@ -444,6 +476,7 @@ public class PantallaPlaya extends Pantalla {
                         puntos += 150;
                         //Borrar bala
                         arrBalas.removeIndex(i);
+                        sonidoFantasma.play(); //Reproducir sonido de muerte del fantasma
                         arrFantasma1.removeIndex(iA);
                         break;
                     }
@@ -567,7 +600,12 @@ public class PantallaPlaya extends Pantalla {
                 Gdx.input.setInputProcessor(escenaPausa); // Cambiar el input Processor a escena pausa
 
             }if (v.x <= ANCHO /2 && v.y < ALTO-botonPausa.sprite.getHeight()){ // Saltar al tocar el lado izquierdo de la pantalla y cuando no se toca el boton de pausa
+                if(edward.devolverEstado() == EstadoEdward.CAMINANDO) { //solo reproducir cuando esta en el suelo, evitar multiples reproducciones
+                    edwardSalto.play(); //Reproducir efecto de sonido para el salto
+                }
                 edward.saltar();
+
+
             }
             return true;
         }

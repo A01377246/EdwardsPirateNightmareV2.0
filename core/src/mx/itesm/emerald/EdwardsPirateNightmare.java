@@ -2,6 +2,7 @@ package mx.itesm.emerald;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,6 +21,11 @@ public class EdwardsPirateNightmare extends Game {
 		// Mostrar primer pantalla
 		setScreen(new PantallaMenu(this)); //Exclusivo de clase game
 
+		Preferences prefs = Gdx.app.getPreferences("silenciar");
+		Boolean musicaEncendida = prefs.getBoolean("musicaEncendida", true); // La musica suena si no se ha modificado el valor
+		if (musicaEncendida){
+			reproducirMusica(TipoMusica.MENU); // reproducir la música del menú cuándo se crea la pantalla
+		}
 	}
 
 
@@ -29,8 +35,14 @@ public class EdwardsPirateNightmare extends Game {
 	}
 
 	public void reproducirMusica(TipoMusica tipo){
-			switch(tipo){
+		if(fondo != null && fondo.isPlaying()) {
+			fondo.stop();
+		}
 
+		Preferences prefs = Gdx.app.getPreferences("silenciar");
+		Boolean musicaEncendida = prefs.getBoolean("musicaEncendida", true); // La musica suena si no se ha modificado el valor
+		if(musicaEncendida) { //Si el usuario tiene seleccionada la opción de reproducir la música
+			switch (tipo) {
 				case MENU:
 					assetManager.load("musica/pirateCrew.wav", Music.class); // Programar la carga de la canción
 					assetManager.finishLoading(); // cargar
@@ -43,14 +55,24 @@ public class EdwardsPirateNightmare extends Game {
 					fondo = assetManager.get("musica/pirateAttack.mp3");
 					break;
 
+				case FINJUEGO:
+					assetManager.load("musica/gameOver.wav", Music.class);
+					assetManager.finishLoading();
+					fondo = assetManager.get("musica/gameOver.wav");
+					break;
+
+
 			}
-			/*if(fondo.isPlaying()){
-				fondo.stop();
-			}*/
 
-			fondo.play();
+					fondo.setLooping(true); // repetir la cancion
+					fondo.play(); // poner la nueva canción
+				}
+			}
 
-	}
+
+
+
+
 	public void detenerMusica(){ // detiene la música
 			fondo.stop();
 	}
@@ -61,10 +83,17 @@ public class EdwardsPirateNightmare extends Game {
 
 	}
 
+
+
 	public enum TipoMusica {
 			NIVEL_1,
 			NIVEL_2,
 			MENU,
+			FINJUEGO,
 			TIENDA
+	}
+
+	public void disminuirVolumen(){
+			fondo.setVolume(0.1f);
 	}
 }

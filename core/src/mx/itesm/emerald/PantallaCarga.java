@@ -1,8 +1,10 @@
 package mx.itesm.emerald;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -40,6 +42,7 @@ public class PantallaCarga extends Pantalla {
         spriteCargando.setPosition(ANCHO/2 - spriteCargando.getWidth()/2, ALTO/2-spriteCargando.getHeight()/2);
 
         cargarSiguientePantalla(); // cargar todos los recursos del nivel 1
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
     private void cargarRecursosNivel1(){
@@ -69,7 +72,12 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("botones/botonPausa.png", Texture.class);
 
 
+        //Cargar efectos de Sonido
 
+        assetManager.load("sonidos/moneda.wav", Sound.class);
+        assetManager.load("sonidos/ghost.wav", Sound.class);
+        assetManager.load("sonidos/hurt.wav", Sound.class);
+        assetManager.load("sonidos/jump.wav", Sound.class);
 
 
         //cargar Audio
@@ -83,6 +91,8 @@ public class PantallaCarga extends Pantalla {
                 cargarRecursosNivel2();
         }
     }
+
+
 
     private void cargarRecursosNivel2() {
     }

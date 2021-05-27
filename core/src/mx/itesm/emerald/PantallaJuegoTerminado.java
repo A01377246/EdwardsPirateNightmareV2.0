@@ -15,8 +15,10 @@ public class PantallaJuegoTerminado extends Pantalla{
     private Texture fondojuegoTerminado;
     private Texture texturaTumba;
     private Tumba tumbaFinalJuego;
+    private EdwardsPirateNightmare juego;
 
     public PantallaJuegoTerminado(final EdwardsPirateNightmare juego){
+        this.juego = juego;
         texturaTumba = new Texture("sprites/Tumbstone.png");
         tumbaFinalJuego = new Tumba(texturaTumba, ANCHO/2, ALTO/4); //Dibujar tumba en el centro de la pantalla
         tumbaFinalJuego.sprite.setScale(5); //Dibujar la tumba 5 veces más grande
@@ -42,6 +44,7 @@ public class PantallaJuegoTerminado extends Pantalla{
 
     @Override
     public void show() {
+        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.FINJUEGO); // poner la música de muerte, f
 
     }
 

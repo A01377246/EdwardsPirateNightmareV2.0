@@ -22,7 +22,7 @@ public class Edward extends Objeto {
     private final float g = 50f;      //pixeles/s^2
 
     //Movimiento a la derecha
-    private final float vx = 150;
+    private final float vx = 160;
 
     private EstadoEdward estado;
 
@@ -32,7 +32,7 @@ public class Edward extends Objeto {
 
     public Edward(Texture textura, float x, float y) {
         TextureRegion region = new TextureRegion(textura);
-        TextureRegion[][] texturas = region.split(160, 160);
+        TextureRegion[][] texturas = region.split(160, 150);
 
         //Cuadros para caminar
         TextureRegion[] arrFramesCaminar = {texturas[0][1], texturas[0][2], texturas[0][3], texturas[1][0],
