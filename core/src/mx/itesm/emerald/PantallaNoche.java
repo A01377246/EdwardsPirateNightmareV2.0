@@ -81,7 +81,7 @@ public class PantallaNoche extends Pantalla {
     private float timerCrearCorazon;
     private final float TIEMPO_CREAR_ITEM_CORAZON = 45; // crear un corazón cuando hayan pasado 40 segundos
 
-    private final float tiempoNivel = 30; //El nivel dura dos minutos
+    private final float tiempoNivel = 120; //El nivel dura dos minutos
     private float timerNivel = 0; // Timer que acumula el tiempo para determinar cuando termina el nivel
 
     //Disparo del personaje
@@ -314,17 +314,19 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void verificarColisionFantasma2() {
-        for (int i = arrCorazones.size - 1; i >= 0; i--) {
-            for (int j = arrFantasma2.size - 1; j >= 0; j--) {
-                Fantasma2 fantasma2 = arrFantasma2.get(j);
-                //si edward choca con un fantasma
-                if (fantasma2.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
-                    edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
-                    arrCorazones.removeIndex(i); //edward pierde un corazon
-                    arrFantasma2.removeIndex(j); //el fantasma desaparece
+        if (timerNivel < 118) {
+            for (int i = arrCorazones.size - 1; i >= 0; i--) {
+                for (int j = arrFantasma2.size - 1; j >= 0; j--) {
+                    Fantasma2 fantasma2 = arrFantasma2.get(j);
+                    //si edward choca con un fantasma
+                    if (fantasma2.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
+                        edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
+                        arrCorazones.removeIndex(i); //edward pierde un corazon
+                        arrFantasma2.removeIndex(j); //el fantasma desaparece
+
+                    }
 
                 }
-
             }
         }
     }
@@ -385,13 +387,15 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void verificarColisionMoneda() {
-        for (int i = arrMonedas.size - 1; i >= 0; i--) {
-            Moneda moneda = arrMonedas.get(i);
-            // si la moneda y Edward chocan
-            if (moneda.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
-                contadorMonedas += 1; // Sumar uno al contador de monedas
-                sonidoMonedaRecogida.play(); //Reproducir sonido de moneda recogida
-                arrMonedas.removeIndex(i); //Remover las monedas
+        if (timerNivel < 118) {
+            for (int i = arrMonedas.size - 1; i >= 0; i--) {
+                Moneda moneda = arrMonedas.get(i);
+                // si la moneda y Edward chocan
+                if (moneda.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
+                    contadorMonedas += 1; // Sumar uno al contador de monedas
+                    sonidoMonedaRecogida.play(); //Reproducir sonido de moneda recogida
+                    arrMonedas.removeIndex(i); //Remover las monedas
+                }
             }
         }
     }
@@ -431,14 +435,16 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void verificarColisionFantasma() {
-        for (int i = arrCorazones.size - 1; i >= 0; i--) {
-            for (int j = arrFantasma1.size - 1; j >= 0; j--) {
-                Fantasma1 fantasma = arrFantasma1.get(j);
-                //si edward choca con un fantasma
-                if (fantasma.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
-                    edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
-                    arrCorazones.removeIndex(i); //edward pierde un corazon
-                    arrFantasma1.removeIndex(j); //el fantasma desaparece
+        if (timerNivel < 118) {
+            for (int i = arrCorazones.size - 1; i >= 0; i--) {
+                for (int j = arrFantasma1.size - 1; j >= 0; j--) {
+                    Fantasma1 fantasma = arrFantasma1.get(j);
+                    //si edward choca con un fantasma
+                    if (fantasma.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
+                        edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
+                        arrCorazones.removeIndex(i); //edward pierde un corazon
+                        arrFantasma1.removeIndex(j); //el fantasma desaparece
+                    }
                 }
             }
         }

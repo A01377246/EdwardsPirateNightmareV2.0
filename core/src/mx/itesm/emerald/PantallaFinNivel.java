@@ -15,13 +15,13 @@ import com.badlogic.gdx.utils.Align;
 import mx.itesm.emerald.edwardspiratenightmare.utilities.Texto;
 
 public class PantallaFinNivel extends Pantalla {
-
     private EdwardsPirateNightmare juego;
     private Texture fondoNivelTerminado;
     private Stage escenaNivelTerminado;
     private Texto texto;
     private int puntos;
     private int numeroMonedas;
+    private int pantalla = 1;
 
     public PantallaFinNivel(EdwardsPirateNightmare juego) {
         this.juego = juego;
@@ -39,15 +39,28 @@ public class PantallaFinNivel extends Pantalla {
         escenaNivelTerminado = new Stage(vista);
         fondoNivelTerminado = new Texture("pantallas/pantallaFinNivelOp.png");
 
-        Button botonVolverAMenu = crearBoton("botones/button_nivel2.png"); // cargar imágen del botón
-        botonVolverAMenu.setPosition(ANCHO / 2, ALTO / 4, Align.center);
-        botonVolverAMenu.addListener(new ClickListener() {
+        Button botonLevel2 = crearBoton("botones/button_nivel2.png"); // cargar imágen del botón
+        botonLevel2.setPosition(ANCHO / 2, ALTO / 4, Align.center);
+        botonLevel2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 juego.setScreen(new PantallaCarga(juego, Pantallas.NIVEL_2));
+                pantalla += 1;
             }
         });
 
+        Button botonVolverAMenu = crearBoton("botones/botonVolverMenu.png"); // cargar imágen del botón
+        botonVolverAMenu.setPosition(0.50f, 0.20f);
+        botonVolverAMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                juego.setScreen(new PantallaMenu(juego));
+            }
+        });
+
+        if (pantalla == 1) {
+            escenaNivelTerminado.addActor(botonLevel2);
+        }
         escenaNivelTerminado.addActor(botonVolverAMenu);
         Gdx.input.setInputProcessor(escenaNivelTerminado);
     }
