@@ -123,12 +123,13 @@ public class PantallaCarga extends Pantalla {
             switch (siguientePantalla) {
                 case NIVEL_1:
                     juego.setScreen(new PantallaPlaya(juego)); // ir al nivel!
+                    break;
                 case NIVEL_2:
                     juego.setScreen(new PantallaNoche(juego));
+                    break;
             }
         } else {
-            float avance = assetManager.getProgress() * 100; //Mostrar avance del asset manager
-            Gdx.app.log("Cargando", avance + "%");
+            float avance = assetManager.getProgress() * 100;
         }
     }
 
