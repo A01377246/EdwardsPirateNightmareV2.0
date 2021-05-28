@@ -81,7 +81,7 @@ public class PantallaNoche extends Pantalla {
     private float timerCrearCorazon;
     private final float TIEMPO_CREAR_ITEM_CORAZON = 45; // crear un corazón cuando hayan pasado 40 segundos
 
-    private final float tiempoNivel = 120; //El nivel dura dos minutos
+    private final float tiempoNivel = 10; //El nivel dura dos minutos
     private float timerNivel = 0; // Timer que acumula el tiempo para determinar cuando termina el nivel
 
     //Disparo del personaje
@@ -277,7 +277,7 @@ public class PantallaNoche extends Pantalla {
             Gdx.input.setInputProcessor(null); // dejar de procesar lo que haga el usuario
             edward.moverDerecha(delta);
             if (tiempoSalida <= 0) {
-                juego.setScreen(new PantallaFinNivel(juego));
+                juego.setScreen(new PantallaFinal(juego));
                 // Guardar puntos y monedas al terminar el nivel
                 Preferences preferencias = Gdx.app.getPreferences("Puntaje");
                 preferencias.putInteger("puntos", puntos);
