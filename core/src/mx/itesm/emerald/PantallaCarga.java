@@ -60,6 +60,7 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("pausa/fondoPPausa.png", Texture.class);
         assetManager.load("pausa/botonMenu.png", Texture.class);
         assetManager.load("botones/botonPausa.png", Texture.class);
+        assetManager.load("botones/button_nivel2.png", Texture.class);
         //Cargar efectos de Sonido
         assetManager.load("sonidos/moneda.wav", Sound.class);
         assetManager.load("sonidos/ghost.wav", Sound.class);

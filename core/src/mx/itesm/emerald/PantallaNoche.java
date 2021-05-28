@@ -127,6 +127,7 @@ public class PantallaNoche extends Pantalla {
         crearBotonPausa();
         crearRectanguloColisionEdward();
         crearSonidos();
+        recuperarInfoNivel();
         procesadorEntrada = new ProcesarEntrada();
 
         //Bloquear tecla back
@@ -137,6 +138,13 @@ public class PantallaNoche extends Pantalla {
 
         //Pone el input Processor
         Gdx.input.setInputProcessor(procesadorEntrada);
+    }
+
+    private void recuperarInfoNivel() {
+        Preferences prefs = Gdx.app.getPreferences("Puntaje");
+        puntos = prefs.getInteger("puntos", 0);
+        prefs = Gdx.app.getPreferences("Monedas");
+        contadorMonedas = prefs.getInteger("contadorMonedas", 0);
     }
 
     private void crearFantasma2() {
@@ -276,6 +284,19 @@ public class PantallaNoche extends Pantalla {
             tiempoSalida -= delta; // Comenzar a restar del tiempo de salida
             Gdx.input.setInputProcessor(null); // dejar de procesar lo que haga el usuario
             edward.moverDerecha(delta);
+            for (Fantasma1 fantasma1 : arrFantasma1)
+            {
+                fantasma1.moverDerecha(-delta);
+            }
+            //Quitar balas de la pantalla
+            for (int i = arrBalas.size - 1; i >= 0; i--) {
+                Bala bala = arrBalas.get(i);
+                bala.mover(-delta*3);
+            }
+            for (Fantasma2 fantasma2 : arrFantasma2)
+            {
+                fantasma2.moverDerecha(-delta);
+            }
             if (tiempoSalida <= 0) {
                 juego.setScreen(new PantallaFinal(juego));
                 // Guardar puntos y monedas al terminar el nivel
