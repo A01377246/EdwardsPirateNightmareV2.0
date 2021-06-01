@@ -22,10 +22,10 @@ public class Gaviota extends Objeto {
     public Gaviota (Texture textura, float x, float y) {
 
         TextureRegion region = new TextureRegion(textura);
-        TextureRegion[][] texturas = region.split(50, 33);
+        TextureRegion[][] texturas = region.split(67,53 );
 
         //Cuadros para volar
-        TextureRegion[] arrFramesVolar = {texturas[0][0], texturas[0][1], texturas[0][2], texturas[0][3]};
+        TextureRegion[] arrFramesVolar = {texturas[0][0], texturas[0][1], texturas[0][2]};
         animacionVolar = new Animation<TextureRegion>(0.1f, arrFramesVolar);
         animacionVolar.setPlayMode(Animation.PlayMode.LOOP);
         timerAnimacion = 0;

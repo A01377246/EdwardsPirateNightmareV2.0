@@ -108,13 +108,13 @@ public class PantallaPlaya extends Pantalla {
 
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Estado Inicial, jugando
 
-    //Gaviotas
+    /*Gaviotas
 
     private Array <Gaviota> arrGaviota;
     private Texture texturaGaviota;
     private float timerCrearGaviota;
     private final float TIEMPO_CREAR_GAVIOTA = 5;
-
+*/
 
     public PantallaPlaya(EdwardsPirateNightmare juego) {
         this.juego = juego;
@@ -137,7 +137,7 @@ public class PantallaPlaya extends Pantalla {
         crearBotonPausa();
         crearRectanguloColisionEdward();
         crearSonidos();
-        crearGaviotas();
+        //crearGaviotas();
         procesadorEntrada = new ProcesarEntrada();
 
         //Bloquear tecla back
@@ -221,11 +221,11 @@ public class PantallaPlaya extends Pantalla {
         texturaBala = assetManager.get("sprites/Bala_Plasma.png");
     }
 
-    private void crearGaviotas(){
+    /*private void crearGaviotas(){
         arrGaviota = new Array<>(3);
         texturaGaviota = assetManager.get("sprites/seagullSheet.png");
     }
-
+*/
     private void crearFondo() {
         texturaFPlaya = assetManager.get("pantallas/P1.png");
     }
@@ -308,10 +308,10 @@ public class PantallaPlaya extends Pantalla {
         }
 
         //Dibujar gaviotas
-            for(Gaviota gaviota : arrGaviota) {
-                gaviota.render(batch);
+            /*for(Gaviota gaviota : arrGaviota) {
+                gaviota.render(batch);*/
 
-        }
+
 
         if (banderaMuerte) {
             juego.setScreen(new PantallaJuegoTerminado(juego));
@@ -357,11 +357,11 @@ public class PantallaPlaya extends Pantalla {
             actualizarItemCorazon(delta);
             verificarColisionItemCorazon();
             actualizarRectanguloDeColision();
-            actualizarGaviota(delta);
+            //actualizarGaviota(delta);
         }
     }
 
-    private void actualizarGaviota(float delta) { //Las gaviotas aparecen cada treinta segundos
+    /*private void actualizarGaviota(float delta) { //Las gaviotas aparecen cada treinta segundos
         timerCrearGaviota += delta;
 
         if (timerCrearGaviota > TIEMPO_CREAR_GAVIOTA) {
@@ -378,6 +378,8 @@ public class PantallaPlaya extends Pantalla {
         }
 
     }
+
+     */
 
 
     private void verificarColisionItemCorazon() {
