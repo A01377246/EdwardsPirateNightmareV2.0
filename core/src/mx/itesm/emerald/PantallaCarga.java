@@ -51,6 +51,7 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sprites/fantasma1/fantasmaAnimacion.png", Texture.class);
         assetManager.load("sprites/soloHeart.png", Texture.class);
         assetManager.load("sprites/Escudo.png", Texture.class);
+        assetManager.load("sprites/seagullSheet.png", Texture.class);
         //Cargar pantallas
         assetManager.load("pantallas/pantallaFinNivelOp.png", Texture.class);
         assetManager.load("pantallas/p1GameOverAlt.png", Texture.class);

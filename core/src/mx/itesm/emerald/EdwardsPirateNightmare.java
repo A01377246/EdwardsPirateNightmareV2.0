@@ -55,6 +55,12 @@ public class EdwardsPirateNightmare extends Game {
 					fondo = assetManager.get("musica/pirateAttack.mp3");
 					break;
 
+				case NIVEL_2:
+					assetManager.load("musica/musicaNivel2.mp3", Music.class);
+					assetManager.finishLoading();
+					fondo = assetManager.get("musica/musicaNivel2.mp3");
+					break;
+
 				case FINJUEGO:
 					assetManager.load("musica/gameOver.wav", Music.class);
 					assetManager.finishLoading();

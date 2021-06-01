@@ -146,7 +146,7 @@ public class PantallaNoche extends Pantalla {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
         //Reproducir Musica nivel 1
-        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.NIVEL_1);
+        juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.NIVEL_2); //reproducir música del nivel 2
 
         //Pone el input Processor
         Gdx.input.setInputProcessor(procesadorEntrada);
@@ -199,7 +199,7 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void crearItemCorazon() {
-        texturaEscudo = assetManager.get("sprites/heart.png");
+        texturaEscudo = assetManager.get("sprites/escudo.png");
         arrItemEscudo = new Array<>(2); // Solo apareceran dos corazones que ayudarán al jugador a recuperar salud.
     }
 
@@ -214,7 +214,7 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void crearCorazon() {
-        Texture texturaCorazon = assetManager.get("sprites/Escudo.png");
+        Texture texturaCorazon = assetManager.get("sprites/heart.png");
         arrCorazones = new Array<>(5);
         for (int renglon = 0; renglon < 1; renglon++) {
             for (int colunma = 0; colunma < 5; colunma++) {
@@ -311,19 +311,8 @@ public class PantallaNoche extends Pantalla {
             tiempoSalida -= delta; // Comenzar a restar del tiempo de salida
             Gdx.input.setInputProcessor(null); // dejar de procesar lo que haga el usuario
             edward.moverDerecha(delta);
-            for (Fantasma1 fantasma1 : arrFantasma1)
-            {
-                fantasma1.moverDerecha(-delta);
-            }
-            //Quitar balas de la pantalla
-            for (int i = arrBalas.size - 1; i >= 0; i--) {
-                Bala bala = arrBalas.get(i);
-                bala.mover(-delta*3);
-            }
-            for (Fantasma2 fantasma2 : arrFantasma2)
-            {
-                fantasma2.moverDerecha(-delta);
-            }
+
+
             if (tiempoSalida <= 0) {
                 juego.setScreen(new PantallaFinal(juego));
                 // Guardar puntos y monedas al terminar el nivel
@@ -391,7 +380,7 @@ public class PantallaNoche extends Pantalla {
             } else {
                 for (int iA = arrFantasma3.size - 1; iA >= 0; iA--) {
                     Fantasma3 fantasma3 = arrFantasma3.get(iA);
-                    if (bala.sprite.getX() >= fantasma3.sprite.getX() && bala.sprite.getY() >= fantasma3.getY() && bala.sprite.getY() <= fantasma3.getY() + fantasma3.sprite.getHeight()) {
+                    if (bala.sprite.getX() >= fantasma3.getX() && bala.sprite.getX() <= fantasma3.getX() + fantasma3.sprite.getWidth() && bala.sprite.getY()>= fantasma3.getY() && bala.sprite.getY()<= fantasma3.getY() + fantasma3.sprite.getHeight()) {
                         //Contar Puntos
                         puntos += 500;
                         //Borrar bala
@@ -457,16 +446,18 @@ public class PantallaNoche extends Pantalla {
             for (Fantasma2 fantasma2 : arrFantasma2) {
                 fantasma2.moverIzquierda(delta * 2);
             }
-        } else if (timerNivel < 90) {
+        } else if (timerNivel > 70 && timerNivel < 100) {
             for (Fantasma2 fantasma2 : arrFantasma2) {
                 fantasma2.moverIzquierda(delta + 3); // los fantasmas son 2 veces más rápidos!
             }
-        } else if (timerNivel < 120) {
+        } else if (timerNivel < 110) {
             for (Fantasma2 fantasma2 : arrFantasma2) {
                 fantasma2.moverIzquierda(delta + 3.5f); // los fantasmas son 5 veces más rápidos!
             }
         } else {
-            //No mover fantasmas en los ultimos 10 segundos de salida del nivel
+            //limpiar arreglo de fantasmas y
+            arrFantasma1.clear();
+            arrFantasma1.clear();
         }
     }
 
@@ -570,7 +561,7 @@ public class PantallaNoche extends Pantalla {
             } else {
                 for (int iA = arrFantasma2.size - 1; iA >= 0; iA--) {
                     Fantasma2 fantasma2 = arrFantasma2.get(iA);
-                    if (bala.sprite.getX() >= fantasma2.sprite.getX() && bala.sprite.getY() >= fantasma2.getY() && bala.sprite.getY() <= fantasma2.getY() + fantasma2.sprite.getHeight()) {
+                    if (bala.sprite.getX() >= fantasma2.getX() && bala.sprite.getX() <= fantasma2.getX() + fantasma2.sprite.getWidth() && bala.sprite.getY()>= fantasma2.getY() && bala.sprite.getY()<= fantasma2.getY() + fantasma2.sprite.getHeight()) {
                         //Contar Puntos
                         puntos += 300;
                         //Borrar bala
@@ -594,7 +585,7 @@ public class PantallaNoche extends Pantalla {
             } else {
                 for (int iA = arrFantasma1.size - 1; iA >= 0; iA--) {
                     Fantasma1 fantasma1 = arrFantasma1.get(iA);
-                    if (bala.sprite.getX() >= fantasma1.sprite.getX() && bala.sprite.getY() >= fantasma1.getY() && bala.sprite.getY() <= fantasma1.getY() + fantasma1.sprite.getHeight()) {
+                    if (bala.sprite.getX() >= fantasma1.getX() && bala.sprite.getX() <= fantasma1.getX() + fantasma1.sprite.getWidth() && bala.sprite.getY()>= fantasma1.getY() && bala.sprite.getY()<= fantasma1.getY() + fantasma1.sprite.getHeight()) {
                         //Contar Puntos
                         puntos += 150;
                         //Borrar bala

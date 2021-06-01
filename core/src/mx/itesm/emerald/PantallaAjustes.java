@@ -139,7 +139,7 @@ public class PantallaAjustes extends Pantalla {
     }
 
     private void crearFondo() {
-        texturaAjustes = new Texture("pantallas/PantallaPrincipal.png");
+        texturaAjustes = new Texture("pantallas/fondoMenuEd.png");
     }
 
     @Override

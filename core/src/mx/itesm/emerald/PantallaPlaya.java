@@ -108,6 +108,13 @@ public class PantallaPlaya extends Pantalla {
 
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Estado Inicial, jugando
 
+    //Gaviotas
+
+    private Array <Gaviota> arrGaviota;
+    private Texture texturaGaviota;
+    private float timerCrearGaviota;
+    private final float TIEMPO_CREAR_GAVIOTA = 5;
+
 
     public PantallaPlaya(EdwardsPirateNightmare juego) {
         this.juego = juego;
@@ -130,6 +137,7 @@ public class PantallaPlaya extends Pantalla {
         crearBotonPausa();
         crearRectanguloColisionEdward();
         crearSonidos();
+        crearGaviotas();
         procesadorEntrada = new ProcesarEntrada();
 
         //Bloquear tecla back
@@ -176,12 +184,12 @@ public class PantallaPlaya extends Pantalla {
 
         texturaBotonPausa = assetManager.get("botones/botonPausa.png");
         botonPausa = new BotonPausa(texturaBotonPausa, 0, ALTO - texturaBotonPausa.getHeight()); //Dibujar el botón de pausa en la esquina superior izquierda
-        botonPausa.sprite.setScale(1.5f); //hacer el botón pausa 1.5 veces mas grande.
+        botonPausa.sprite.setScale(0.9f); //hacer el botón pausa 10% más pequeño
 
     }
 
     private void crearItemCorazon() {
-        texturaCorazon = assetManager.get("sprites/heart.png");
+        texturaCorazon = assetManager.get("sprites/Escudo.png");
         arrItemCorazon = new Array<>(2); // Solo apareceran dos corazones que ayudarán al jugador a recuperar salud.
     }
 
@@ -211,6 +219,11 @@ public class PantallaPlaya extends Pantalla {
     private void crearBalas() {
         arrBalas = new Array<>();
         texturaBala = assetManager.get("sprites/Bala_Plasma.png");
+    }
+
+    private void crearGaviotas(){
+        arrGaviota = new Array<>(3);
+        texturaGaviota = assetManager.get("sprites/seagullSheet.png");
     }
 
     private void crearFondo() {
@@ -294,45 +307,37 @@ public class PantallaPlaya extends Pantalla {
             itemCorazon.render(batch);
         }
 
+        //Dibujar gaviotas
+            for(Gaviota gaviota : arrGaviota) {
+                gaviota.render(batch);
+
+        }
+
         if (banderaMuerte) {
             juego.setScreen(new PantallaJuegoTerminado(juego));
         }
+
         if (banderaFinNivel) {
-            estadoJuego = EstadoJuego.CAMBION;
             tiempoSalida -= delta; // Comenzar a restar del tiempo de salida
              // dejar de procesar lo que haga el usuario
             edward.moverDerecha(delta*2);
-            escenaCambio = new EscenaCambio(vista);
-            //Quitar fantasmas de la pantalla
-            for (Fantasma1 fantasma1 : arrFantasma1)
-            {
-                fantasma1.moverDerecha(-delta);
+            Gdx.input.setInputProcessor(null);
             }
-            //Quitar balas de la pantalla
-            for (int i = arrBalas.size - 1; i >= 0; i--) {
-                Bala bala = arrBalas.get(i);
-                bala.mover(-delta*3);
-            }
-            if (tiempoSalida <= 4) {
-                //juego.setScreen(new PantallaCambioNivel(juego));
+            if (tiempoSalida <= 5) {
                 // Guardar puntos y monedas al terminar el nivel
+                juego.setScreen(new PantallaFinNivel(juego));
                 Preferences preferencias = Gdx.app.getPreferences("Puntaje");
                 preferencias.putInteger("puntos", puntos);
                 preferencias = Gdx.app.getPreferences("Monedas");
                 preferencias.putInteger("contadorMonedas", contadorMonedas);
                 preferencias.flush(); //Se guardan en memoria no volátil
-            }
+
         }
         batch.end();
 
         //Dibujar la pausa
         if (estadoJuego == EstadoJuego.PAUSADO && escenaPausa != null) { // Si el usuario ya tocó el botón de pausa
             escenaPausa.draw(); // dibujar pausa
-        }
-
-        if(estadoJuego == EstadoJuego.CAMBION && escenaCambio != null)
-        {
-            escenaCambio.draw();
         }
 
     }
@@ -352,23 +357,28 @@ public class PantallaPlaya extends Pantalla {
             actualizarItemCorazon(delta);
             verificarColisionItemCorazon();
             actualizarRectanguloDeColision();
-        }
-        if (estadoJuego == EstadoJuego.CAMBION)
-        {
-            //Gdx.input.setInputProcessor(escenaCambio);
-            actualizarFondo();
-            //actualizarFantasma1(delta);
-            //actualizarBalas(delta);
-            //verificarColisionFantasma();
-            actualizarTiempo(delta);
-            verificarSalud();
-            actualizarMonedas(delta);
-            //verificarColisionMoneda();
-            actualizarItemCorazon(delta);
-            //verificarColisionItemCorazon();
-            //actualizarRectanguloDeColision();
+            actualizarGaviota(delta);
         }
     }
+
+    private void actualizarGaviota(float delta) { //Las gaviotas aparecen cada treinta segundos
+        timerCrearGaviota += delta;
+
+        if (timerCrearGaviota > TIEMPO_CREAR_GAVIOTA) {
+            timerCrearGaviota = 0;
+            Gaviota gaviota = new Gaviota(texturaGaviota, 0, 500);
+            gaviota.sprite.setScale(500);
+            arrGaviota.add(gaviota);
+
+        }
+            // mover Gaviota
+            for (Gaviota gaviota : arrGaviota) {
+                gaviota.moverDerecha(delta);
+
+        }
+
+    }
+
 
     private void verificarColisionItemCorazon() {
 
@@ -467,7 +477,8 @@ public class PantallaPlaya extends Pantalla {
             for (int j = arrFantasma1.size - 1; j >= 0; j--) {
                 Fantasma1 fantasma = arrFantasma1.get(j);
                 //si edward choca con un fantasma
-                if (fantasma.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
+                if (fantasma.sprite.getX() >= edward.sprite.getX() && fantasma.sprite.getX() <= edward.sprite.getX() + edward.sprite.getWidth()-50 &&
+                        fantasma.sprite.getY() + fantasma.sprite.getHeight()/2 >= edward.sprite.getY() && fantasma.sprite.getY() <= edward.sprite.getY() + edward.sprite.getHeight() -30) {
                     edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
                     arrCorazones.removeIndex(i); //edward pierde un corazon
                     arrFantasma1.removeIndex(j); //el fantasma desaparece
@@ -491,7 +502,7 @@ public class PantallaPlaya extends Pantalla {
             } else {
                 for (int iA = arrFantasma1.size - 1; iA >= 0; iA--) {
                     Fantasma1 fantasma1 = arrFantasma1.get(iA);
-                    if (bala.sprite.getBoundingRectangle().overlaps(fantasma1.sprite.getBoundingRectangle())) {
+                    if (bala.sprite.getX() >= fantasma1.getX() && bala.sprite.getX() <= fantasma1.getX() + fantasma1.sprite.getWidth() && bala.sprite.getY()>= fantasma1.getY() && bala.sprite.getY()<= fantasma1.getY() + fantasma1.sprite.getHeight()) {
                         //Contar Puntos
                         puntos += 150;
                         //Borrar bala
@@ -522,16 +533,14 @@ public class PantallaPlaya extends Pantalla {
             for (Fantasma1 fantasma1 : arrFantasma1) {
                 fantasma1.moverIzquierda(delta);
             }
-        } else if (timerNivel < 90) {
+        } else if (timerNivel < 110) {
             for (Fantasma1 fantasma1 : arrFantasma1) {
                 fantasma1.moverIzquierda(delta * 2); // los fantasmas son 2 veces más rápidos!
             }
-        } else if (timerNivel < 120) {
-            for (Fantasma1 fantasma1 : arrFantasma1) {
-                fantasma1.moverIzquierda(delta * 5); // los fantasmas son 5 veces más rápidos!
-            }
+
         } else {
-            //No mover fantasmas en los ultimos 10 segundos de salida del nivel
+            //limpiar arreglo  en los últimos 10 segundos
+            arrFantasma1.clear();
         }
     }
 
@@ -633,11 +642,6 @@ public class PantallaPlaya extends Pantalla {
                 }
             }
 
-            //Input procesor cambia a escena de cambio de nivel
-            if(estadoJuego == EstadoJuego.CAMBION)
-            {
-                Gdx.input.setInputProcessor(escenaCambio);
-            }
 
             return true;
         }

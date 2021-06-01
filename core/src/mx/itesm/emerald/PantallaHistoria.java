@@ -25,6 +25,8 @@ public class PantallaHistoria extends Pantalla {
         texturaVolver = new Texture("botones/botonvolverS.png");
         TextureRegionDrawable trdBtnVolver = new TextureRegionDrawable(texturaVolver);
         Button botonVolver = new Button(trdBtnVolver);
+        botonVolver.setTransform(true); // Para poder hacer cambios en el botón
+        botonVolver.setScale(0.8f); //hacer el botòn volver màs pequeño
         botonVolver.setPosition(0,0);
         botonVolver.addListener(new ClickListener(){
             @Override

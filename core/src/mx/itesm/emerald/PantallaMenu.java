@@ -31,7 +31,7 @@ public class PantallaMenu extends Pantalla {
 
 
     private void crearMenu() {
-        texturaFondo = new Texture("pantallas/PantallaPrincipal.png");
+        texturaFondo = new Texture("pantallas/fondoMenuEd.png");
         // crear escena
         escenaMenu = new Stage(vista); // vista como paramétro para que se escalen correctamente
 
@@ -49,7 +49,7 @@ public class PantallaMenu extends Pantalla {
         });
 
         Button btncreditos = crearBoton("botones/botonCreditosf.png", "botones/botonCreditosfS.png");
-        btncreditos.setPosition(2 * ANCHO / 3, ALTO / 4, Align.center);
+        btncreditos.setPosition(2 * ANCHO / 3, ALTO / 3 - 20, Align.center);
         btncreditos.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -58,7 +58,7 @@ public class PantallaMenu extends Pantalla {
         });
 
         Button btnAjustes = crearBoton("botones/boton ajustes.png", "botones/boton ajustes.png");
-        btnAjustes.setPosition(0, 0); // habra que editar el boton, le sobra mucho espacio
+        btnAjustes.setPosition(50, 50); // habra que editar el boton, le sobra mucho espacio
         btnAjustes.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -67,7 +67,7 @@ public class PantallaMenu extends Pantalla {
         });
 
         Button btnHistoria = crearBoton("botones/botonHistoria.png", "botones/botonHistoriaS.png");
-        btnHistoria.setPosition(2 * ANCHO / 3, 2 * ALTO / 4, Align.center);
+        btnHistoria.setPosition(2 * ANCHO / 3,  2* ALTO / 4, Align.center);
         btnHistoria.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -76,7 +76,7 @@ public class PantallaMenu extends Pantalla {
         });
 
         Button btnTienda = crearBoton("botones/botonTienda.png", "botones/botonTiendaS.png");
-        btnTienda.setPosition(ANCHO / 3, ALTO / 4, Align.center);
+        btnTienda.setPosition(ANCHO / 3, ALTO / 3 - 20, Align.center);
         btnTienda.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
