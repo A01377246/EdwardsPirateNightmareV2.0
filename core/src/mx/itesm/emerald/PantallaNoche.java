@@ -64,7 +64,7 @@ public class PantallaNoche extends Pantalla {
     private Array<Fantasma3> arrFantasma3;
     private Texture texturaFantasma3;
     private float timerCrearFantasma3;
-    private final float TIEMPO_CREAR_FANTASMA3 = 30;
+    private final float TIEMPO_CREAR_FANTASMA3 = 30; //se crea cada 30 segundos
 
     //Crear Marcador
     private int puntos = 0;

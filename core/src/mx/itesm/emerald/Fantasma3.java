@@ -25,7 +25,7 @@ public class Fantasma3 extends Objeto
         sprite.setX(sprite.getX()+dx);
     }
 
-    public void rebote(float delta)
+    public void rebote(float delta) //Movimiento de rebote del fantasma 3
     {
         float dy = velocidadY*delta;
         sprite.setY(sprite.getY()+dy);
