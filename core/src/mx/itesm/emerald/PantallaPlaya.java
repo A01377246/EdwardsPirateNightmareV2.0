@@ -318,10 +318,19 @@ public class PantallaPlaya extends Pantalla {
         }
 
         if (banderaFinNivel) {
+            estadoJuego = EstadoJuego.CAMBION;
             tiempoSalida -= delta; // Comenzar a restar del tiempo de salida
              // dejar de procesar lo que haga el usuario
             edward.moverDerecha(delta*2);
-            Gdx.input.setInputProcessor(null);
+            for (Fantasma1 fantasma1 : arrFantasma1)
+            {
+                fantasma1.moverDerecha(-delta);
+            }
+            //Quitar balas de la pantalla
+            for (int i = arrBalas.size - 1; i >= 0; i--) {
+                Bala bala = arrBalas.get(i);
+                bala.mover(-delta*3);
+            }
             }
             if (tiempoSalida <= 5) {
                 // Guardar puntos y monedas al terminar el nivel
@@ -357,6 +366,20 @@ public class PantallaPlaya extends Pantalla {
             actualizarItemCorazon(delta);
             verificarColisionItemCorazon();
             actualizarRectanguloDeColision();
+            //actualizarGaviota(delta);
+        }
+        if (estadoJuego == EstadoJuego.CAMBION) {
+            //actualizarFondo();
+            //actualizarFantasma1(delta);
+            actualizarBalas(delta);
+            //verificarColisionFantasma();
+            actualizarTiempo(delta);
+            //verificarSalud();
+            actualizarMonedas(delta);
+            //verificarColisionMoneda();
+            actualizarItemCorazon(delta);
+            //verificarColisionItemCorazon();
+            //actualizarRectanguloDeColision();
             //actualizarGaviota(delta);
         }
     }
@@ -579,14 +602,14 @@ public class PantallaPlaya extends Pantalla {
 
         //borrar pantallas
         assetManager.unload("pantallas/pantallaFinNivelOp.png");
-        assetManager.unload("pantallas/p1GameOverAlt.png");
+        assetManager.unload("pantallas/P1GameOverAlt.png");
         assetManager.unload("pantallas/P1.png");
 
 
         //cargar botones
         assetManager.unload("pausa/botonContinuar.png");
         assetManager.unload("pausa/botonMenu.png");
-        assetManager.unload("pausa/fondoPPausa.png");
+        assetManager.unload("pausa/FondoPPausa.png");
         assetManager.unload("pausa/botonMenu.png");
         assetManager.unload("botones/botonPausa.png");
 
@@ -683,7 +706,7 @@ public class PantallaPlaya extends Pantalla {
         public EscenaPausa(final Viewport vista) {
             super(vista); // Usar constructor de super clase stage
 
-            texturaFondo = assetManager.get("pausa/fondoPPausa.png");
+            texturaFondo = assetManager.get("pausa/FondoPPausa.png");
             Image imgFondo = new Image(texturaFondo);
             //Mostrar imagen en el centro de la pantalla
             imgFondo.setPosition(ANCHO / 2, ALTO / 2 - 30, Align.center);

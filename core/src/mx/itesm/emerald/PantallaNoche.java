@@ -199,7 +199,7 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void crearItemCorazon() {
-        texturaEscudo = assetManager.get("sprites/escudo.png");
+        texturaEscudo = assetManager.get("sprites/Escudo.png");
         arrItemEscudo = new Array<>(2); // Solo apareceran dos corazones que ayudarán al jugador a recuperar salud.
     }
 
@@ -655,19 +655,20 @@ public class PantallaNoche extends Pantalla {
         assetManager.unload("sprites/coin.png");
         assetManager.unload("sprites/Bala_Plasma.png");
         assetManager.unload("sprites/heart.png");
+        assetManager.unload("sprites/Escudo.png");
         assetManager.unload("sprites/fantasma1/fantasmaAnimacion.png");
         assetManager.unload("sprites/fantasma3/boss_edward.png");
         assetManager.unload("sprites/soloHeart.png");
 
         //borrar pantallas
         assetManager.unload("pantallas/pantallaFinNivelOp.png");
-        assetManager.unload("pantallas/p1GameOverAlt.png");
+        assetManager.unload("pantallas/P1GameOverAlt.png");
         assetManager.unload("pantallas/Fondo2.png");
 
         //cargar botones
         assetManager.unload("pausa/botonContinuar.png");
         assetManager.unload("pausa/botonMenu.png");
-        assetManager.unload("pausa/fondoPPausa.png");
+        assetManager.unload("pausa/FondoPPausa.png");
         assetManager.unload("pausa/botonMenu.png");
         assetManager.unload("botones/botonPausa.png");
     }
@@ -753,7 +754,7 @@ public class PantallaNoche extends Pantalla {
         public EscenaPausa(final Viewport vista) {
             super(vista); // Usar constructor de super clase stage
 
-            texturaFondo = assetManager.get("pausa/fondoPPausa.png");
+            texturaFondo = assetManager.get("pausa/FondoPPausa.png");
             Image imgFondo = new Image(texturaFondo);
             //Mostrar imagen en el centro de la pantalla
             imgFondo.setPosition(ANCHO / 2, ALTO / 2 - 30, Align.center);

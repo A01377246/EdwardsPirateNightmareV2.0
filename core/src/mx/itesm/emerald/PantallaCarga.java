@@ -54,12 +54,12 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sprites/seagullSheet.png", Texture.class);
         //Cargar pantallas
         assetManager.load("pantallas/pantallaFinNivelOp.png", Texture.class);
-        assetManager.load("pantallas/p1GameOverAlt.png", Texture.class);
+        assetManager.load("pantallas/P1GameOverAlt.png", Texture.class);
         assetManager.load("pantallas/P1.png", Texture.class);
         //cargar botones
         assetManager.load("pausa/botonContinuar.png", Texture.class);
         assetManager.load("pausa/botonMenu.png", Texture.class);
-        assetManager.load("pausa/fondoPPausa.png", Texture.class);
+        assetManager.load("pausa/FondoPPausa.png", Texture.class);
         assetManager.load("pausa/botonMenu.png", Texture.class);
         assetManager.load("botones/botonPausa.png", Texture.class);
         assetManager.load("botones/button_nivel2.png", Texture.class);
@@ -91,6 +91,7 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sprites/coin.png", Texture.class);
         assetManager.load("sprites/Bala_Plasma.png", Texture.class);
         assetManager.load("sprites/heart.png", Texture.class);
+        assetManager.load("sprites/Escudo.png", Texture.class);
         assetManager.load("sprites/fantasma1/fantasmaAnimacion.png", Texture.class);
         assetManager.load("sprites/fantasma2/fantasma2Animacion.png", Texture.class);
         assetManager.load("sprites/fantasma3/boss_edward.png", Texture.class);
@@ -98,12 +99,12 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sprites/soloHeart.png", Texture.class);
         //cargar pantallas
         assetManager.load("pantallas/pantallaFinNivelOp.png", Texture.class);
-        assetManager.load("pantallas/p1GameOverAlt.png", Texture.class);
+        assetManager.load("pantallas/P1GameOverAlt.png", Texture.class);
         assetManager.load("pantallas/Fondo2.png", Texture.class);
         //cargar botones
         assetManager.load("pausa/botonContinuar.png", Texture.class);
         assetManager.load("pausa/botonMenu.png", Texture.class);
-        assetManager.load("pausa/fondoPPausa.png", Texture.class);
+        assetManager.load("pausa/FondoPPausa.png", Texture.class);
         assetManager.load("pausa/botonMenu.png", Texture.class);
         assetManager.load("botones/botonPausa.png", Texture.class);
         //Cargar efectos de Sonido
