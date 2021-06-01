@@ -3,11 +3,11 @@ package mx.itesm.emerald;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Bala extends Objeto {
-    private float vX = 350;
+    private float vX = 300;
 
     public Bala(Texture textura, float x, float y) {
         super(textura, x, y);
-        sprite.setScale(.5f); // Reducir el tamaño de la vala 50%
+        sprite.setScale(2.5f); // Aumentar el tamaño de la bala de plasma.
     }
 
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -59,6 +60,12 @@ public class PantallaNoche extends Pantalla {
     private float timerCrearFantasma2;
     private final float TIEMPO_CREAR_FANTASMA2 = 6;
 
+    //Fantasma 3 y rebote
+    private Array<Fantasma3> arrFantasma3;
+    private Texture texturaFantasma3;
+    private float timerCrearFantasma3;
+    private final float TIEMPO_CREAR_FANTASMA3 = 30;
+
     //Crear Marcador
     private int puntos = 0;
     private Texto texto;
@@ -75,11 +82,14 @@ public class PantallaNoche extends Pantalla {
     //Timer salida de edward del nivel
     private float tiempoSalida = 10;
 
-    // Objeto Corazon
-    private Texture texturaCorazon;
-    private Array<Corazon> arrItemCorazon;
-    private float timerCrearCorazon;
-    private final float TIEMPO_CREAR_ITEM_CORAZON = 45; // crear un corazón cuando hayan pasado 40 segundos
+    // Objeto Escudo
+    private Texture texturaEscudo;
+    private Array<Corazon> arrItemEscudo;
+    private float timerCrearEscudo;
+    private final float TIEMPO_CREAR_ITEM_ESCUDO = 45; // crear un corazón cuando hayan pasado 40 segundos
+
+
+    //Tiempo Nivel
 
     private final float tiempoNivel = 120; //El nivel dura dos minutos
     private float timerNivel = 0; // Timer que acumula el tiempo para determinar cuando termina el nivel
@@ -87,6 +97,7 @@ public class PantallaNoche extends Pantalla {
     //Disparo del personaje
     private Array<Bala> arrBalas;
     private Texture texturaBala;
+    private Sound sonidoBala;
 
     //Vidas del personaje
     private Array<Corazon> arrCorazones;
@@ -120,6 +131,7 @@ public class PantallaNoche extends Pantalla {
         crearCorazon();
         crearFantasma1();
         crearFantasma2();
+        crearFantasma3();
         crearMoneda();
         crearTumba();
         crearIconoContadorMonedas();
@@ -139,6 +151,12 @@ public class PantallaNoche extends Pantalla {
         //Pone el input Processor
         Gdx.input.setInputProcessor(procesadorEntrada);
     }
+
+    private void crearFantasma3() {
+        arrFantasma3 = new Array<>(); //
+        texturaFantasma3 = assetManager.get("sprites/fantasma3/boss_edward.png");
+    }
+
 
     private void recuperarInfoNivel() {
         Preferences prefs = Gdx.app.getPreferences("Puntaje");
@@ -169,6 +187,9 @@ public class PantallaNoche extends Pantalla {
         //SonidosEdward
         edwardLastimado = assetManager.get("sonidos/hurt.wav");
         edwardSalto = assetManager.get("sonidos/jump.wav");
+
+        //SonidosBala
+        sonidoBala = assetManager.get("sonidos/laserpew.wav");
     }
 
     private void crearBotonPausa() {
@@ -178,8 +199,8 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void crearItemCorazon() {
-        texturaCorazon = assetManager.get("sprites/heart.png");
-        arrItemCorazon = new Array<>(2); // Solo apareceran dos corazones que ayudarán al jugador a recuperar salud.
+        texturaEscudo = assetManager.get("sprites/heart.png");
+        arrItemEscudo = new Array<>(2); // Solo apareceran dos corazones que ayudarán al jugador a recuperar salud.
     }
 
     private void crearIconoContadorMonedas() {
@@ -193,7 +214,7 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void crearCorazon() {
-        Texture texturaCorazon = assetManager.get("sprites/heart.png");
+        Texture texturaCorazon = assetManager.get("sprites/Escudo.png");
         arrCorazones = new Array<>(5);
         for (int renglon = 0; renglon < 1; renglon++) {
             for (int colunma = 0; colunma < 5; colunma++) {
@@ -206,7 +227,7 @@ public class PantallaNoche extends Pantalla {
 
     private void crearBalas() {
         arrBalas = new Array<>();
-        texturaBala = assetManager.get("sprites/bala.png");
+        texturaBala = assetManager.get("sprites/Bala_Plasma.png");
     }
 
     private void crearFondo() {
@@ -246,7 +267,7 @@ public class PantallaNoche extends Pantalla {
         //Dibuja personaje
         edward.render(batch);
         //Dibujar marcador
-        texto.mostrarMensaje(batch, Integer.toString(puntos), 0.95f * ANCHO, 0.95f * ALTO);
+        texto.mostrarMensaje(batch, Integer.toString(puntos), 0.83f * ANCHO, 0.95f * ALTO);
         //Dibujar botón Pausa
         botonPausa.render(batch);
         //Dibujar corazon
@@ -261,6 +282,12 @@ public class PantallaNoche extends Pantalla {
         for (Fantasma2 fantasma2 : arrFantasma2) {
             fantasma2.render(batch);
         }
+
+        //Dibujar Jefe Final
+        for (Fantasma3 fantasma3: arrFantasma3) {
+            fantasma3.render(batch);
+        }
+
         //Dibujar balas
         for (Bala bala : arrBalas) {
             bala.render(batch);
@@ -273,7 +300,7 @@ public class PantallaNoche extends Pantalla {
         iconoContadorMonedas.render(batch);
         texto.mostrarMensaje(batch, Integer.toString(contadorMonedas), 0.55f * ANCHO, 0.95f * ALTO);
         //Dibujar item corazon
-        for (Corazon itemCorazon : arrItemCorazon) {
+        for (Corazon itemCorazon : arrItemEscudo) {
             itemCorazon.render(batch);
         }
         if (banderaMuerte) {
@@ -308,6 +335,7 @@ public class PantallaNoche extends Pantalla {
             }
         }
         batch.end();
+
         //Dibujar la pausa
         if (estadoJuego == EstadoJuego.PAUSADO && escenaPausa != null) { // Si el usuario ya tocó el botón de pausa
             escenaPausa.draw(); // dibujar pausa
@@ -320,10 +348,13 @@ public class PantallaNoche extends Pantalla {
             actualizarFondo();
             actualizarFantasma1(delta);
             actualizarFantasma2(delta);
-            actualizarBalas(delta);
-            actualizarBalas2(delta);
+            actualizarFantasma3(delta);
+            actualizarBalas(delta); //Fantasma1
+            actualizarBalas2(delta); //Fantasma2
+            actualizarBalas3(delta);
             verificarColisionFantasma();
             verificarColisionFantasma2();
+            verificarColisionFantasma3();
             actualizarTiempo(delta);
             verificarSalud();
             actualizarMonedas(delta);
@@ -331,6 +362,64 @@ public class PantallaNoche extends Pantalla {
             actualizarItemCorazon(delta);
             verificarColisionItemCorazon();
             actualizarRectanguloDeColision();
+        }
+    }
+
+    private void verificarColisionFantasma3() {
+        if (timerNivel < 118) {
+            for (int i = arrCorazones.size - 1; i >= 0; i--) {
+                for (int j = arrFantasma3.size - 1; j >= 0; j--) {
+                    Fantasma3 fantasma3 = arrFantasma3.get(j);
+                    //si edward choca con un fantasma
+                    if (fantasma3.sprite.getBoundingRectangle().overlaps(rectColisionE)) {
+                        edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
+                        arrCorazones.removeIndex(i); //edward pierde un corazon
+                        arrFantasma3.removeIndex(j); //el fantasma desaparece
+                    }
+                }
+            }
+        }
+    }
+
+    private void actualizarBalas3(float delta) {
+        for (int i = arrBalas.size - 1; i >= 0; i--) {
+            Bala bala = arrBalas.get(i);
+            bala.mover(delta);
+            //prueba si la bola debe de desaparecer si se sale de la pantalla
+            if (bala.getX() > ANCHO) {
+                arrBalas.removeIndex(i);
+            } else {
+                for (int iA = arrFantasma3.size - 1; iA >= 0; iA--) {
+                    Fantasma3 fantasma3 = arrFantasma3.get(iA);
+                    if (bala.sprite.getX() >= fantasma3.sprite.getX() && bala.sprite.getY() >= fantasma3.getY() && bala.sprite.getY() <= fantasma3.getY() + fantasma3.sprite.getHeight()) {
+                        //Contar Puntos
+                        puntos += 500;
+                        //Borrar bala
+                        arrBalas.removeIndex(i);
+                        sonidoFantasma.play(); //Reproducir sonido de muerte del fantasma
+                        arrFantasma3.removeIndex(iA);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void actualizarFantasma3(float delta) {
+        timerCrearFantasma3 += delta;
+        if (timerCrearFantasma3 > TIEMPO_CREAR_FANTASMA3)
+        {
+            timerCrearFantasma3=0;
+            //Crear fantasma3
+            float xFantasma3 = MathUtils.random(ANCHO,ANCHO * 1.5f);
+            float yFantasma3 = MathUtils.random(30, 210);
+            Fantasma3 fantasma3 = new Fantasma3(texturaFantasma3,xFantasma3,yFantasma3);
+            arrFantasma3.add(fantasma3);
+        }
+        //Mover fantasma3
+        for (Fantasma3 fantasma3: arrFantasma3) {
+            fantasma3.moverIzquierda(delta);
+            fantasma3.rebote(delta);
         }
     }
 
@@ -382,27 +471,27 @@ public class PantallaNoche extends Pantalla {
     }
 
     private void verificarColisionItemCorazon() {
-        for (int i = arrItemCorazon.size - 1; i >= 0; i--) {
-            Corazon corazon = arrItemCorazon.get(i);
+        for (int i = arrItemEscudo.size - 1; i >= 0; i--) {
+            Corazon corazon = arrItemEscudo.get(i);
             // si la moneda y Edward chocan
             if (corazon.sprite.getBoundingRectangle().overlaps(edward.sprite.getBoundingRectangle())) {
-                arrCorazones.add(corazon); // añadir un corazon para recuperar salud
-                arrItemCorazon.removeIndex(i); //Remover el corazon
+                arrCorazones.add(corazon); // añadir un escudo que bloquea un golpe
+                arrItemEscudo.removeIndex(i); //Remover el corazon
             }
         }
     }
 
     private void actualizarItemCorazon(float delta) {
-        timerCrearCorazon += delta;
-        if (timerCrearCorazon > TIEMPO_CREAR_ITEM_CORAZON) {
-            timerCrearCorazon = 0;
+        timerCrearEscudo += delta;
+        if (timerCrearEscudo > TIEMPO_CREAR_ITEM_ESCUDO) {
+            timerCrearEscudo = 0;
             float xCorazon = MathUtils.random(ANCHO, ANCHO + 1.5f);
             float yCorazon = MathUtils.random(80, 210);
-            Corazon itemCorazon = new Corazon(texturaCorazon, xCorazon, yCorazon);
-            arrItemCorazon.add(itemCorazon);
+            Corazon itemCorazon = new Corazon(texturaEscudo, xCorazon, yCorazon);
+            arrItemEscudo.add(itemCorazon);
         }
         // mover corazones
-        for (Corazon corazon : arrItemCorazon) {
+        for (Corazon corazon : arrItemEscudo) {
             corazon.moverIzquierda(delta);
         }
     }
@@ -481,9 +570,9 @@ public class PantallaNoche extends Pantalla {
             } else {
                 for (int iA = arrFantasma2.size - 1; iA >= 0; iA--) {
                     Fantasma2 fantasma2 = arrFantasma2.get(iA);
-                    if (bala.sprite.getBoundingRectangle().overlaps(fantasma2.sprite.getBoundingRectangle())) {
+                    if (bala.sprite.getX() >= fantasma2.sprite.getX() && bala.sprite.getY() >= fantasma2.getY() && bala.sprite.getY() <= fantasma2.getY() + fantasma2.sprite.getHeight()) {
                         //Contar Puntos
-                        puntos += 150;
+                        puntos += 300;
                         //Borrar bala
                         arrBalas.removeIndex(i);
                         sonidoFantasma.play(); //Reproducir sonido de muerte del fantasma
@@ -505,7 +594,7 @@ public class PantallaNoche extends Pantalla {
             } else {
                 for (int iA = arrFantasma1.size - 1; iA >= 0; iA--) {
                     Fantasma1 fantasma1 = arrFantasma1.get(iA);
-                    if (bala.sprite.getBoundingRectangle().overlaps(fantasma1.sprite.getBoundingRectangle())) {
+                    if (bala.sprite.getX() >= fantasma1.sprite.getX() && bala.sprite.getY() >= fantasma1.getY() && bala.sprite.getY() <= fantasma1.getY() + fantasma1.sprite.getHeight()) {
                         //Contar Puntos
                         puntos += 150;
                         //Borrar bala
@@ -545,6 +634,7 @@ public class PantallaNoche extends Pantalla {
             }
         } else {
             //No mover fantasmas en los ultimos 10 segundos de salida del nivel
+            arrFantasma1.clear();
         }
     }
 
@@ -572,9 +662,10 @@ public class PantallaNoche extends Pantalla {
         assetManager.unload("sprites/pauseButton.png");
         assetManager.unload("sprites/edwardRun.png");
         assetManager.unload("sprites/coin.png");
-        assetManager.unload("sprites/bala.png");
+        assetManager.unload("sprites/Bala_Plasma.png");
         assetManager.unload("sprites/heart.png");
         assetManager.unload("sprites/fantasma1/fantasmaAnimacion.png");
+        assetManager.unload("sprites/fantasma3/boss_edward.png");
         assetManager.unload("sprites/soloHeart.png");
 
         //borrar pantallas
@@ -615,6 +706,7 @@ public class PantallaNoche extends Pantalla {
                 //Dispara
                 Bala bala = new Bala(texturaBala, edward.sprite.getX() + edward.sprite.getWidth() * 1 / 2, edward.getY() + edward.sprite.getHeight() * 1 / 2);
                 arrBalas.add(bala);
+                sonidoBala.play();
                 //Verificar boton pausa
 
             }

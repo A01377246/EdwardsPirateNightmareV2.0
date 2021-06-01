@@ -76,12 +76,13 @@ public class PantallaPlaya extends Pantalla {
     private float timerCrearCorazon;
     private final float TIEMPO_CREAR_ITEM_CORAZON = 45; // crear un corazón cuando hayan pasado 40 segundos
 
-    private final float tiempoNivel = 15; //El nivel dura dos minutos
+    private final float tiempoNivel = 120; //El nivel dura dos minutos
     private float timerNivel = 0; // Timer que acumula el tiempo para determinar cuando termina el nivel
 
     //Disparo del personaje
     private Array<Bala> arrBalas;
     private Texture texturaBala;
+    private Sound sonidoBala;
 
     //Vidas del personaje
     private Array<Corazon> arrCorazones;
@@ -167,6 +168,8 @@ public class PantallaPlaya extends Pantalla {
         edwardLastimado = assetManager.get("sonidos/hurt.wav");
         edwardSalto = assetManager.get("sonidos/jump.wav");
 
+        //Sonido Disparo
+        sonidoBala = assetManager.get("sonidos/laserpew.wav");
     }
 
     private void crearBotonPausa() {
@@ -207,7 +210,7 @@ public class PantallaPlaya extends Pantalla {
 
     private void crearBalas() {
         arrBalas = new Array<>();
-        texturaBala = assetManager.get("sprites/bala.png");
+        texturaBala = assetManager.get("sprites/Bala_Plasma.png");
     }
 
     private void crearFondo() {
@@ -254,7 +257,7 @@ public class PantallaPlaya extends Pantalla {
         //Dibuja personaje
         edward.render(batch);
         //Dibujar marcador
-        texto.mostrarMensaje(batch, Integer.toString(puntos), 0.85f * ANCHO, 0.95f * ALTO);
+        texto.mostrarMensaje(batch, Integer.toString(puntos), 0.83f * ANCHO, 0.95f * ALTO);
 
         //Dibujar botón Pausa
 
@@ -557,7 +560,7 @@ public class PantallaPlaya extends Pantalla {
         assetManager.unload("sprites/pauseButton.png");
         assetManager.unload("sprites/edwardRun.png");
         assetManager.unload("sprites/coin.png");
-        assetManager.unload("sprites/bala.png");
+        assetManager.unload("sprites/Bala_Plasma.png");
         assetManager.unload("sprites/heart.png");
         assetManager.unload("sprites/fantasma1/fantasmaAnimacion.png");
         assetManager.unload("sprites/soloHeart.png");
@@ -606,6 +609,7 @@ public class PantallaPlaya extends Pantalla {
                     //Dispara
                     Bala bala = new Bala(texturaBala, edward.sprite.getX() + edward.sprite.getWidth() * 1 / 2, edward.getY() + edward.sprite.getHeight() * 1 / 2);
                     arrBalas.add(bala);
+                    sonidoBala.play();
                     //Verificar boton pausa
 
                 }
@@ -613,10 +617,11 @@ public class PantallaPlaya extends Pantalla {
                         v.y < botonPausa.sprite.getY() + botonPausa.sprite.getHeight() && v.y > botonPausa.sprite.getY()
                         && escenaPausa == null) { //Solo crear la escena de pausa cuándo no existe un objeto previo
 
-                    escenaPausa = new EscenaPausa(vista); // crear nueva escena Pausa
-                    estadoJuego = EstadoJuego.PAUSADO;
-                    edward.cambiaAnimación(estadoJuego); // pausar a edward
-                    Gdx.input.setInputProcessor(escenaPausa); // Cambiar el input Processor a escena pausa
+                        escenaPausa = new EscenaPausa(vista); // crear nueva escena Pausa
+                        estadoJuego = EstadoJuego.PAUSADO;
+                        edward.cambiaAnimación(estadoJuego); // pausar a edward
+                        Gdx.input.setInputProcessor(escenaPausa); // Cambiar el input Processor a escena pausa
+
 
                 }
 
@@ -725,7 +730,7 @@ public class PantallaPlaya extends Pantalla {
         public EscenaCambio(Viewport vista)
         {
             super(vista);
-            Texture texturaCambio = new Texture("botones/button_nivel2.png");
+            Texture texturaCambio = new Texture("botones/botonContinuarEscena.png");
             TextureRegionDrawable trd = new TextureRegionDrawable(texturaCambio);
             Button botonCambio = new Button(trd);
             botonCambio.setPosition(ANCHO/2,ALTO*0.3f,Align.center);

@@ -19,6 +19,7 @@ public class Moneda extends Objeto{
 
     }
     public float getX() {
+
         return sprite.getX();
     }
 

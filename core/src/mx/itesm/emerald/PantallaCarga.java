@@ -37,7 +37,7 @@ public class PantallaCarga extends Pantalla {
         texturaCargando = assetManager.get("pantallaCarga/iconoCargaTimon.png");
         spriteCargando = new Sprite(texturaCargando);
         spriteCargando.setPosition(ANCHO / 2 - spriteCargando.getWidth() / 2, ALTO / 2 - spriteCargando.getHeight() / 2);
-        cargarSiguientePantalla(); // cargar todos los recursos del nivel 1
+        cargarSiguientePantalla(); // cargar recursos
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
@@ -46,11 +46,12 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sprites/pauseButton.png", Texture.class);
         assetManager.load("sprites/edwardRun.png", Texture.class);
         assetManager.load("sprites/coin.png", Texture.class);
-        assetManager.load("sprites/bala.png", Texture.class);
+        assetManager.load("sprites/Bala_Plasma.png", Texture.class);
         assetManager.load("sprites/heart.png", Texture.class);
         assetManager.load("sprites/fantasma1/fantasmaAnimacion.png", Texture.class);
         assetManager.load("sprites/soloHeart.png", Texture.class);
-        //cargar pantallas
+        assetManager.load("sprites/Escudo.png", Texture.class);
+        //Cargar pantallas
         assetManager.load("pantallas/pantallaFinNivelOp.png", Texture.class);
         assetManager.load("pantallas/p1GameOverAlt.png", Texture.class);
         assetManager.load("pantallas/P1.png", Texture.class);
@@ -66,6 +67,7 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sonidos/ghost.wav", Sound.class);
         assetManager.load("sonidos/hurt.wav", Sound.class);
         assetManager.load("sonidos/jump.wav", Sound.class);
+        assetManager.load("sonidos/laserpew.wav", Sound.class);
         //cargar Audio
 
     }
@@ -74,8 +76,10 @@ public class PantallaCarga extends Pantalla {
         switch (siguientePantalla) {
             case NIVEL_1:
                 cargarRecursosNivel1();
+                break;
             case NIVEL_2:
                 cargarRecursosNivel2();
+                break;
         }
     }
 
@@ -84,10 +88,12 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sprites/pauseButton.png", Texture.class);
         assetManager.load("sprites/edwardRun.png", Texture.class);
         assetManager.load("sprites/coin.png", Texture.class);
-        assetManager.load("sprites/bala.png", Texture.class);
+        assetManager.load("sprites/Bala_Plasma.png", Texture.class);
         assetManager.load("sprites/heart.png", Texture.class);
         assetManager.load("sprites/fantasma1/fantasmaAnimacion.png", Texture.class);
         assetManager.load("sprites/fantasma2/fantasma2Animacion.png", Texture.class);
+        assetManager.load("sprites/fantasma3/boss_edward.png", Texture.class);
+
         assetManager.load("sprites/soloHeart.png", Texture.class);
         //cargar pantallas
         assetManager.load("pantallas/pantallaFinNivelOp.png", Texture.class);
@@ -104,6 +110,7 @@ public class PantallaCarga extends Pantalla {
         assetManager.load("sonidos/ghost.wav", Sound.class);
         assetManager.load("sonidos/hurt.wav", Sound.class);
         assetManager.load("sonidos/jump.wav", Sound.class);
+        assetManager.load("sonidos/laserpew.wav", Sound.class);
     }
 
     @Override
@@ -126,7 +133,7 @@ public class PantallaCarga extends Pantalla {
                     juego.setScreen(new PantallaPlaya(juego)); // ir al nivel!
                     break;
                 case NIVEL_2:
-                    juego.setScreen(new PantallaNoche(juego));
+                    juego.setScreen(new PantallaNoche(juego)); // ir al nivel 2
                     break;
             }
         } else {
