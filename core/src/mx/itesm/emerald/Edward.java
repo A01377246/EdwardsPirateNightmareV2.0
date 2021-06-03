@@ -32,7 +32,7 @@ public class Edward extends Objeto {
 
     public Edward(Texture textura, float x, float y) {
         TextureRegion region = new TextureRegion(textura);
-        TextureRegion[][] texturas = region.split(160, 150);
+        TextureRegion[][] texturas = region.split(63, 126);
 
         //Cuadros para caminar
         TextureRegion[] arrFramesCaminar = {texturas[0][1], texturas[0][2], texturas[0][3], texturas[1][0],
@@ -51,21 +51,21 @@ public class Edward extends Objeto {
     //Reescribimos el metodo render para mostrar la animacion.
     public void render(SpriteBatch batch) {
 
-            float delta = Gdx.graphics.getDeltaTime();
-            switch (estado) {
-                case CAMINANDO:
-                    if(!animarEdward){ // Si el juego está en pausa, no actualizar animación.
-                        timerAnimacion = 0;
+        float delta = Gdx.graphics.getDeltaTime();
+        switch (estado) {
+            case CAMINANDO:
+                if (!animarEdward) { // Si el juego está en pausa, no actualizar animación.
+                    timerAnimacion = 0;
                 }
-                    timerAnimacion += delta;
-                    TextureRegion frame = animacionCorrer.getKeyFrame(timerAnimacion);
-                    batch.draw(frame, sprite.getX(), sprite.getY());
-                    break;
-                case SALTANDO:
-                    actualizar();
-                    super.render(batch);
-                    break;
-            }
+                timerAnimacion += delta;
+                TextureRegion frame = animacionCorrer.getKeyFrame(timerAnimacion);
+                batch.draw(frame, sprite.getX(), sprite.getY());
+                break;
+            case SALTANDO:
+                actualizar();
+                super.render(batch);
+                break;
+        }
 
         //Si está pausado, dejar de moverse
     }
@@ -94,16 +94,16 @@ public class Edward extends Objeto {
         }
     }
 
-    public void moverDerecha(float delta){ // este método solo se llama cuando termina el nivel para que Edward salga de la pantalla
+    public void moverDerecha(float delta) { // este método solo se llama cuando termina el nivel para que Edward salga de la pantalla
         float dx = vx * delta;
         sprite.setX(dx + sprite.getX()); // actualizar posición
 
     }
 
-    public void cambiaAnimación (EstadoJuego estado){ // Este método cambia el valor de la variable animación cuando el juego se pone en pausa o se sale de pausa
-        if(estado == EstadoJuego.PAUSADO){
+    public void cambiaAnimación(EstadoJuego estado) { // Este método cambia el valor de la variable animación cuando el juego se pone en pausa o se sale de pausa
+        if (estado == EstadoJuego.PAUSADO) {
             animarEdward = false;
-        }else{
+        } else {
             animarEdward = true;
 
 
@@ -119,7 +119,7 @@ public class Edward extends Objeto {
         return sprite.getY();
     }
 
-    public EstadoEdward devolverEstado(){ //Devuelve el estado del personaje
+    public EstadoEdward devolverEstado() { //Devuelve el estado del personaje
         return estado;
     }
 }

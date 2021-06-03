@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import mx.itesm.emerald.Objeto;
 
 
-
 public class Fantasma1 extends Objeto {
     private Animation<TextureRegion> animacion;
     private float timerAnimacion;
@@ -21,7 +20,7 @@ public class Fantasma1 extends Objeto {
 
     public Fantasma1(Texture textura, float x, float y) {
         TextureRegion region = new TextureRegion(textura);
-        TextureRegion[][] texturas = region.split(128, 128);
+        TextureRegion[][] texturas = region.split(98, 112);
 
         //Animacion
         TextureRegion[] arrFrames = {texturas[0][1], texturas[0][2], texturas[0][3], texturas[0][4]};
@@ -47,15 +46,16 @@ public class Fantasma1 extends Objeto {
         sprite.setX(sprite.getX() + dx);
     }
 
-    public void moverDerecha(float delta){
+    public void moverDerecha(float delta) {
         float dx = velocidadX * delta;
-        sprite.setX(sprite.getX()+dx);
+        sprite.setX(sprite.getX() + dx);
     }
 
-    public float getX(){
+    public float getX() {
         return sprite.getX();
     }
-    public float getY(){
+
+    public float getY() {
         return sprite.getY();
     }
 }

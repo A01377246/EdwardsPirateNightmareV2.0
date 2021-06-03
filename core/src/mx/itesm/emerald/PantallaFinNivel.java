@@ -102,7 +102,8 @@ public class PantallaFinNivel extends Pantalla {
     public void dispose() {
     }
 
-    private Button crearBoton(String imagen) { // añadir segundo parámetro para hacer un cambio cuando el usuario da click
+    // añadir segundo parámetro para hacer un cambio cuando el usuario da click
+    private Button crearBoton(String imagen) {
         // crear otra textura y otro drawable
         Texture texturaBoton = new Texture(imagen); // cargar imagén del botón.
         TextureRegionDrawable trdBtnJugar = new TextureRegionDrawable(texturaBoton); // tipo correcto del boton, drawable. No acepta texture

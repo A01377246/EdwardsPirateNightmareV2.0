@@ -57,10 +57,10 @@ public class PantallaFinal extends Pantalla {
     }
 
     private void recuperarInfoNivel() {
-        Preferences prefs = Gdx.app.getPreferences("Puntaje");
-        puntos = prefs.getInteger("puntos", 0);
-        prefs = Gdx.app.getPreferences("Monedas");
-        numeroMonedas = prefs.getInteger("contadorMonedas", 0);
+        Preferences prefs = Gdx.app.getPreferences("Puntaje2");
+        puntos = prefs.getInteger("puntos2", 0);
+        prefs = Gdx.app.getPreferences("Monedas2");
+        numeroMonedas = prefs.getInteger("contadorMonedas2", 0);
     }
 
     @Override
