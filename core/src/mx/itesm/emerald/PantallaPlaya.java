@@ -101,6 +101,11 @@ public class PantallaPlaya extends Pantalla {
     //Estados del Juego
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Estado Inicial, jugando
 
+    //objetos
+
+    boolean vidaExtra;
+    boolean bandana;
+
     /*Gaviotas
     private Array <Gaviota> arrGaviota;
     private Texture texturaGaviota;
@@ -119,6 +124,7 @@ public class PantallaPlaya extends Pantalla {
         crearTexto();
         crearEdward();
         crearBalas();
+        recuperarObjetos();
         crearCorazon();
         crearFantasma1();
         crearMoneda();
@@ -128,6 +134,7 @@ public class PantallaPlaya extends Pantalla {
         crearBotonPausa();
         crearRectanguloColisionEdward();
         crearSonidos();
+
         //recuperarInfoNivel();
         //crearGaviotas();
         procesadorEntrada = new ProcesarEntrada();
@@ -143,9 +150,18 @@ public class PantallaPlaya extends Pantalla {
     }
 
     private void recuperarInfoNivel() {
+
         Preferences prefs = Gdx.app.getPreferences("Puntaje");
         puntos = prefs.getInteger("puntos", 0);
         contadorMonedas = prefs.getInteger("contadorMonedas", 0);
+
+
+    }
+
+    private void recuperarObjetos(){ // revisa si el usuario hizo alguna compra en la tienda
+        Preferences prefs = Gdx.app.getPreferences("Objetos");
+        bandana = prefs.getBoolean("bandanaActiva",false);
+        vidaExtra = prefs.getBoolean("vidaExtra", false);
     }
 
     private void crearRectanguloColisionEdward() {
@@ -193,16 +209,32 @@ public class PantallaPlaya extends Pantalla {
     }
 
     private void crearCorazon() {
+
         Texture texturaCorazon = assetManager.get("sprites/heart.png");
-        arrCorazones = new Array<>(5);
-        for (int renglon = 0; renglon < 1; renglon++) {
-            for (int colunma = 0; colunma < 5; colunma++) {
-                Corazon corazon = new Corazon(texturaCorazon,
-                        50 + colunma * 60, 0.85f * ALTO + renglon * 60);
-                arrCorazones.add(corazon);
+
+        if (vidaExtra) { // si el jugador compró una vida extra, dibujar 6 corazones
+            arrCorazones = new Array<>(6);
+            for (int renglon = 0; renglon < 1; renglon++) {
+                for (int columna = 0; columna < 6; columna++) {
+                    Corazon corazon = new Corazon(texturaCorazon,
+                            50 + columna * 60, 0.85f * ALTO + renglon * 60);
+                    arrCorazones.add(corazon);
+                }
+            }
+        } else { // dibujar 5 corazones
+            arrCorazones = new Array<>(5);
+            for (int renglon = 0; renglon < 1; renglon++) {
+                for (int columna = 0; columna < 5; columna++) {
+                    Corazon corazon = new Corazon(texturaCorazon,
+                            50 + columna * 60, 0.85f * ALTO + renglon * 60);
+                    arrCorazones.add(corazon);
+
+                }
+
             }
         }
     }
+
 
     private void crearBalas() {
         arrBalas = new Array<>();
@@ -300,9 +332,17 @@ public class PantallaPlaya extends Pantalla {
                 moneda.moverDerecha(-delta);
             }
             Preferences preferencias = Gdx.app.getPreferences("Puntaje");
+            Preferences preferenciasObjetos = Gdx.app.getPreferences("Objetos");
             preferencias.putInteger("puntos", puntos);
-            preferencias.putInteger("contadorMonedas", contadorMonedas);
+            Preferences preferenciasMonedas = Gdx.app.getPreferences("Monedas");
+            preferenciasMonedas.putInteger("contadorMonedas", contadorMonedas);
+
+            //Actualizar objetos
+            preferenciasObjetos.putBoolean("bandanaActiva", false);
+            preferenciasObjetos.putBoolean("vidaExtra", true);
             preferencias.flush(); //Se guardan en memoria no volátil
+            preferenciasMonedas.flush();
+
         }
         if (tiempoSalida <= 5) {
             // Guardar puntos y monedas al terminar el nivel
@@ -395,7 +435,7 @@ public class PantallaPlaya extends Pantalla {
             for (int j = arrFantasma1.size - 1; j >= 0; j--) {
                 Fantasma1 fantasma = arrFantasma1.get(j);
                 //si edward choca con un fantasma
-                if (fantasma.sprite.getBoundingRectangle().overlaps(edward.sprite.getBoundingRectangle())) {
+                if (fantasma.sprite.getX() >= edward.sprite.getX() && fantasma.sprite.getX()<= edward.sprite.getX() + edward.sprite.getWidth() && fantasma.sprite.getY() >= edward.sprite.getY() && fantasma.sprite.getY()  <= edward.sprite.getY() + edward.sprite.getHeight()){
                     edwardLastimado.play(); //reproducir sonido cuando edward es lastimado
                     arrCorazones.removeIndex(i); //edward pierde un corazon
                     arrFantasma1.removeIndex(j); //el fantasma desaparece
@@ -479,7 +519,11 @@ public class PantallaPlaya extends Pantalla {
                     Fantasma1 fantasma1 = arrFantasma1.get(iA);
                     if (bala.sprite.getBoundingRectangle().overlaps(fantasma1.sprite.getBoundingRectangle())) {
                         //Contar Puntos
-                        puntos += 150;
+                        if(bandana){ // si se compró la bandana
+                            puntos += 300;
+                        }else {
+                            puntos += 150;
+                        }
                         //Borrar bala
                         arrBalas.removeIndex(i);
                         sonidoFantasma.play(); //Reproducir sonido de muerte del fantasma

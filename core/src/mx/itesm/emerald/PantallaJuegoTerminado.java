@@ -22,7 +22,7 @@ public class PantallaJuegoTerminado extends Pantalla{
         texturaTumba = new Texture("sprites/Tumbstone.png");
         tumbaFinalJuego = new Tumba(texturaTumba, ANCHO/2, ALTO/4); //Dibujar tumba en el centro de la pantalla
         tumbaFinalJuego.sprite.setScale(5); //Dibujar la tumba 5 veces más grande
-        fondojuegoTerminado = new Texture("pantallas/pantallaFin.png");
+        fondojuegoTerminado = new Texture("pantallas/pantallaMuerte.png");
         escenaJuegoTerminado = new Stage(vista); // parámetro vista para escalar correctamente
         Button botonVolverAMenu = crearBoton("botones/botonVolverMenu.png"); // cargar imágen del botón
         botonVolverAMenu.setPosition(0, 25);
@@ -45,6 +45,7 @@ public class PantallaJuegoTerminado extends Pantalla{
     @Override
     public void show() {
         juego.reproducirMusica(EdwardsPirateNightmare.TipoMusica.FINJUEGO); // poner la música de muerte, f
+
 
     }
 

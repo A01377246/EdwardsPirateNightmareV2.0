@@ -42,7 +42,7 @@ public class PantallaCambioNivel extends Pantalla
         escenaCambio = new Stage(vista);
         fondoCambio = new Texture("Cambio/fondoCambio.png");
 
-        Button botonCambio = crearBoton("pausa/botonContinuar.png"); // cargar imágen del botón
+        Button botonCambio = crearBoton("pausa/botonContinuarEscena.png"); // cargar imágen del botón
         botonCambio.setPosition(ANCHO / 2, ALTO*0.3f, Align.center);
         botonCambio.addListener(new ClickListener() {
             @Override
